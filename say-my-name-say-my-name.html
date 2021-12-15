@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <base href="">
+
+    <!--
+    favicons generated with:
+    <http://realfavicongenerator.net>
+
+    if you want to generate your own favicon, use this custom path:
+    /theme/ico/favicon/
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/ico/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/ico/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/ico/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/ico/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/ico/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/ico/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/ico/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/ico/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/theme/ico/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/theme/ico/favicon/manifest.json">
+    <link rel="mask-icon" href="/theme/ico/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/theme/ico/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/theme/ico/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/ico/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    <script src="/theme/js/lib/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="/theme/css/uikit.min.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/custom.min.css" />
+    <!-- default pygment style is the 'default' style -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
+    <script src="/theme/js/uikit.min.js"></script>
+    <title>"say my name, say my name” ain’t just for destiny’s child | the packetologist</title>
+   <meta name="tags" content="ruckus, wi-fi" />  <meta name="description" content="No, I’m not quitting my career as an IT professional to start a R&amp;B group, but hopefully the title of my blog post captured your attention enough to get..." />  <meta name="category" content="Wi-Fi" /> 
+  </head>
+  <body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <nav class="uk-navbar uk-margin-large-bottom">
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+        </ul>
+        <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
+        <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
+    </nav>
+    <div class="uk-grid" data-uk-grid-margin="">
+        <main class="uk-width-medium-3-4">
+<article>
+<div class="uk-article">
+    <header>
+    <h1 class=" uk-article-title">
+        <a href="/say-my-name-say-my-name.html">"Say my name, say my name” ain’t just for Destiny’s Child</a>
+    </h1>
+    <p class="uk-article-meta">
+    Published on   <time datetime="2021-10-04">Mon 04 October 2021</time>
+        by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
+    posted in <a href="/category/wi-fi.html">Wi-Fi</a>
+    <br/>
+    <a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a>
+    <a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a>
+
+    </p>
+    </header>
+    <p>No, I’m not quitting my career as an IT professional to start a <a href="https://www.youtube.com/watch?v=sQgd6MccwZc">R&amp;B group</a>, but hopefully the title of my blog post captured your attention enough to get you here. Now let me explain.</p>
+<p>Earlier this year, RUCKUS released SmartZone (SZ) 6.0. There were many new features and improvements like a completely redesigned web UI for example, but another minor feature made the cut as well: AP Hostname Advertisement</p>
+<p><img alt="" class="wp-image-376" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/SZ-ReleaseNotes-1024x168.png"></p>
+<p>As you can see above, the feature is disabled by default for security reasons… You wouldn’t necessarily want someone who’s performing Wi-Fi reconnaissance in your environment to discover your naming convention or know exactly where your APs are located, but this feature can come in handy for tasks like <a href="https://www.ekahau.com/blog/ap-name-broadcasting-2/">site surveying</a> and troubleshooting.</p>
+<p>Some of you may be thinking, “Keith, this isn’t anything new… My \$wifi_vendor has been doing this for years! So why should I care?”. And I’d say you’re right. It’s not new and it’s not game changing. However, from what I understand this has been a very contentious topic within RUCKUS for years so to finally have it available is great for anyone surveying or troubleshooting a RUCKUS WLAN. Also, this blog post adds value by showing you how to enable this new feature within SZ, where to look for it in the beacon or probe response frames, and what was needed to get Wireshark to decode it properly.</p>
+<h2>Enabling the feature</h2>
+<p>To enable this feature, you’ll first need to make sure you’re working with a 6.0 zone. Yes, with RUCKUS you can have multiple zones with different firmware versions which provides a lot of flexibility when it comes to upgrading and managing your WLAN. See Jim Palmer’s <a href="https://jimswirelessworld.wordpress.com/2021/02/18/multi-generational-ap-control-with-ruckus/">excellent blog post</a> on the topic if you want to learn more. You can verify the AP firmware of a zone by clicking on the zone in the left window pane and either editing it or looking down below in the “Configuration” section as shown below.</p>
+<p><img alt="" class="wp-image-382" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/SZ-VerifyZone-1-1024x664.jpg"></p>
+<p>Within the 6.0 zone, create or edit a WLAN, scroll down to the “Advanced Options” section and expand it. You’ll see the “AP Host Name Advertisement in Beacon” feature. Click on the slider button next to it to enable it and click OK.</p>
+<p><img alt="" class="wp-image-383" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/SZ-Enable-feature-1-1024x905.png"></p>
+<p>After clicking OK, you’ll need to wait a minute or two to allow the configuration to be pushed down to the APs in that zone and that are also advertising that specific WLAN.  Once your AP shows a configuration status of “Up-to-date”, you should be good to go.</p>
+<p><img alt="" class="wp-image-384" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/SZ-APs-1024x193.png"></p>
+<p>Now how do we verify it’s working as advertised? (pun intended)</p>
+<h2>Finding the information element in Wireshark</h2>
+<p>As the release notes mentioned, you’ll need to find the AP’s hostname in a vendor specific IE within a beacon or probe response frame. If you expand the “Tagged parameters” section under “IEEE 802.11 Wireless Management”, you’ll find the vendor specific IEs at or near the bottom of the list.</p>
+<p><img alt="" class="wp-image-388" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/Wireshark-1.png"></p>
+<p>If you expand all 3 IEs to see what’s inside of them, it’ll look like the screenshot below. But where’s the name?</p>
+<p><img alt="" class="wp-image-387" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/Wireshark-vendorspecific-1.png"></p>
+<p>It’s the IE that I’ve highlighted with the vendor specific OUI type of 3. How do I know this? Well, initially I guessed that it was this field and converted the vendor specific data from hex to ASCII. It turned out to be a great guess because it matched the name of my AP.</p>
+<p><img alt="" class="wp-image-389" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/hex-to-ascii.png"></p>
+<p>Since this is a new and relatively minor feature, the latest releases of Wireshark from August 25, 2021 (3.4.8 and 3.2.16) do not know how to decode this information. As my good friend <a href="https://twitter.com/joshschmelzle">Josh Schmelzle</a> pointed out, a dissector needed to be created for this new IE and while I’m somewhat dangerous with Python, I do not know C which is what the Wireshark dissectors are written in. Fortunately, <a href="https://twitter.com/adriangranados">Adrian Granados</a> who’s written dissectors for other vendors in the past stepped in and wrote one for RUCKUS, and then submitted it to Wireshark’s GitLab repository. After about an hour or so, Adrian showed me that he had it working in <a href="https://www.intuitibits.com/products/wifi-explorer-pro/">WFE Pro</a> and mentioned that it should be working in the latest <a href="https://www.wireshark.org/download/automated/">automated build</a> of Wireshark’s development version. I pulled it down, fired it up, and opened the packet capture to verify. Immediately, I was able to see the difference!</p>
+<p><img alt="" class="wp-image-391" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/Wireshark-dev1-1.png"></p>
+<p><img alt="" class="wp-image-392" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/Wireshark-dev2.png"></p>
+<p>In conclusion, SmartZone 6.0 introduced the ability to advertise an AP’s name in beacon and response frames which can be handy for site surveying and troubleshooting. This feature is disabled by default for security reasons. I’ve shown you how to enable it and where to find the name in Wireshark. In future releases of both Wireshark and WFE Pro 3, you should be able to see the decoded value of the AP’s name. Additionally, Josh is also adding the ability to see this information in his <a href="https://github.com/joshschmelzle/lswifi">lswifi</a> tool for anyone who uses Windows and I highly suggest you check it out. Big thanks to both Adrian and Josh!</p>
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
+
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is , check out more <a href="">about me</a>.
+      </p>
+  </div>
+
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="#" class="uk-icon-button uk-icon-justify uk-icon-You can add links in your config file"></a>
+          <a href="#" class="uk-icon-button uk-icon-justify uk-icon-Another social link"></a>
+      </div>
+  </div>
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
+
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+          <li><a href="#" class="uk-icon-external-link">You can modify those links in your config file</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+        </ul>
+    </div>
+</div>
+  </body>
+</html>

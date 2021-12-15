@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <base href="">
+
+    <!--
+    favicons generated with:
+    <http://realfavicongenerator.net>
+
+    if you want to generate your own favicon, use this custom path:
+    /theme/ico/favicon/
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/ico/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/ico/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/ico/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/ico/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/ico/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/ico/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/ico/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/ico/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/theme/ico/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/theme/ico/favicon/manifest.json">
+    <link rel="mask-icon" href="/theme/ico/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/theme/ico/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/theme/ico/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/ico/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    <script src="/theme/js/lib/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="/theme/css/uikit.min.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/custom.min.css" />
+    <!-- default pygment style is the 'default' style -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
+    <script src="/theme/js/uikit.min.js"></script>
+    <title>Client fingerprinting is broken and no one seems to care | the packetologist</title>
+   <meta name="tags" content="dhcp, ruckus, wi-fi" />  <meta name="description" content="Client fingerprinting, in my opinion, is one of those features that many people don’t think about until they either need it, want it, or it&#39;s broken. It’s..." />  <meta name="category" content="Troubleshooting, Wi-Fi" /> 
+  </head>
+  <body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <nav class="uk-navbar uk-margin-large-bottom">
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+        </ul>
+        <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
+        <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
+    </nav>
+    <div class="uk-grid" data-uk-grid-margin="">
+        <main class="uk-width-medium-3-4">
+<article>
+<div class="uk-article">
+    <header>
+    <h1 class=" uk-article-title">
+        <a href="/fingerprinting-is-broken.html">Client fingerprinting is broken and no one seems to care</a>
+    </h1>
+    <p class="uk-article-meta">
+    Published on   <time datetime="2021-10-06">Wed 06 October 2021</time>
+        by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
+    posted in <a href="/category/troubleshooting-wi-fi.html">Troubleshooting, Wi-Fi</a>
+    <br/>
+    <a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a>
+    <a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a>
+    <a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a>
+
+    </p>
+    </header>
+    <p>Client fingerprinting, in my opinion, is one of those features that many people don’t think about until they either need it, want it, or it's broken. It’s not as sexy as other Wi-Fi security related topics such as 802.1X or micro segmentation and it’s certainly not going to prevent a client from operating correctly on the network if it’s not available (or can it?). However, it does help provide insight into your Wi-Fi client base which can be valuable in terms of knowing what device or devices are popular and making sure your Wi-Fi supports them well. Additionally, it is possible to tie access controls to clients by their device type which can affect what they are able to do on the network. With that said, it’s probably worth knowing how client devices are identified from their manufacturer down to the OS version and more importantly, the methods your Wi-Fi vendor uses to identify them. In this post, I’m going to discuss how client fingerprinting is done in general, how RUCKUS does it, and how one method of fingerprinting that we use today is changing due to security concerns.</p>
+<p>Traditionally, fingerprinting has leveraged globally unique MAC Addresses (almost impossible today thanks to MAC randomization) or DHCP as a best effort to identify a client’s vendor and/or OS. When a client joins a DHCP-enabled network, it sends DHCP Discover and Request packets and in them they request a list of items called the “Parameter Request List” or Option 55 that helps to configure themselves properly on the network. Some of those list items might even be familiar to you… Subnet mask, router (aka default gateway), domain name servers, or domain name ring a bell to anyone? Yep, clients request those items and more during the DHCP process. And just so you are aware, there are other options that a client might include that can be leveraged for identification like Option 12 (Hostname), Option 60 (Vendor Class Identifier), or Option 61 (Client Identifier), but I’m going to primarily focus on Option 55. As a side note, Apple devices do not include Option 60 so it will not help you in all scenarios.</p>
+<p>You might be wondering how this helps with fingerprinting if every client is asking for the same or similar information? Great question! Most vendors will use very specific options in a very specific order and those options may or may not change with every new version of OS that is released. For example, Windows Vista and Windows 7 used the same list and order (1,15,3,6,44,46,47,31,33,121,249,43). As another example, here are the items requested by an Apple device running macOS 10.15 aka Catalina:</p>
+<p><img alt="" class="size-full wp-image-405 aligncenter" height="560" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/dhcp-options-catalina.png" width="593"></p>
+<p>Now let's look at a request from an Apple device running macOS 11 (Big Sur):</p>
+<p><img alt="" class="aligncenter wp-image-407 size-full" height="561" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/dhcp-options-bigsur-1.png" width="582"></p>
+<p>It can be hard to catch, so I highlighted the difference in orange. Big Sur requests the additional "DHCP Captive-Portal" item (114) right below "Domain Name". Let's try one more for fun... How about from a beta of macOS 12 (Monterey)?</p>
+<p><img alt="" class="aligncenter size-full wp-image-408" height="613" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/dhcp-options-monterey.png" width="591"></p>
+<p>In addition to item 114, it's also requesting item 108 "Removed/Unassigned" right before it. By using the specific list of requested items and the order they are in, you can formulate an intelligent guess of what vendor and OS a device is running. But it's still just that, a guess. And look how easy it was to figure that out... An attacker could manipulate their DHCP packets to make their device look like any other if they wanted to; especially if they knew they could get access to different resources if your policies are tied to device types. Additionally, what if two different devices are requesting the same items? Sure, there's also Option 60 and 61 that can be leveraged, but with some manufacturers like Apple not using Option 60, it makes the guess that much tougher. Fortunately, there are other options available to aid in fingerprinting, but most Wi-Fi vendors have settled on either DHCP or a combination of DHCP and HTTP for their fingerprinting capabilities.</p>
+<p>Up until SmartZone 5.2, RUCKUS only relied on DHCP for fingerprinting which as you’ve now seen, is flawed. In addition to DHCP, SmartZone 5.2 began to use HTTP for fingerprinting as well. It’s important to make that distinction clear. HTTP, not HTTPS, which means the packet was sent in cleartext. If the controller or AP processes one of these cleartext HTTP packets from a client device, it will use information from the included User-Agent (UA) string which is a field in the HTTP header that every web browser sends to identify the client’s OS and web browser to a receiving web server. DHCP with the use of the options like 55, 60, and 61 can still be leveraged to initially identify the vendor and device type, but HTTP (if detected) will take precedence in terms of identifying the OS. For those of you who might be unfamiliar with the user-agent string, here’s what it looks like from within Wireshark:</p>
+<p>[caption id="attachment_425" align="aligncenter" width="1122"]<img alt="" class="wp-image-425 size-full" height="114" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/http-ua-catalina-chrome-1.png" width="1122"> [Chrome in macOS Catalina 10.15.7]{style="color: #808080;"}[/caption]<br>
+[caption id="attachment_423" align="aligncenter" width="818"]<img alt="" class="wp-image-423 size-full" height="77" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/http-ua-catalina-firefox-1.png" width="818"> [Firefox in macOS Catalina 10.15.7]{style="color: #808080;"}[/caption]<br>
+[caption id="attachment_426" align="aligncenter" width="1109"]<img alt="" class="size-full wp-image-426" height="115" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/http-ua-catalina-safari.png" width="1109"> [Safari in macOS Catalina 10.15.7]{style="color: #808080;"}[/caption]</p>
+<p>As you can see by the screen shots above. Each browser's UA string is slightly different, but they all state that the device is an Intel Mac running 10.15. An easy way to see the UA string being sent by your device and web browser is to visit <a href="https://www.whatismybrowser.com/detect/what-is-my-user-agent">whatismybrowser.com</a> In the screen shot below (Thanks Darrell!), it appears that Apple isn't capping the UA string for iOS 15 by default just yet, but from what I understand (e.g. Firefox is already doing this in Windows) it is coming to all major browsers on all major OSes so be ready! </p>
+<p><img alt="" class="wp-image-471" height="670" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/ios15-ua-string-612x1024.jpg" width="400"></p>
+<p>This issue caught my attention when a colleague raised the question about why our platform (SmartZone) was not classifying newer versions of macOS (11 and 12 beta) correctly; a MacBook Pro running Big Sur (11.5.7) was being classified as Catalina (10.15.7). The finger was initially pointed towards our software developers to get the client databases updated, but the more I dug into this issue, the more I realized it wasn’t their fault. This behavior was planned and operating exactly how the major web browser companies and security folks planned it.</p>
+<p>Back in 2020, major players like Apple, Google, and Mozilla started to discuss and prepare for capping the UA string in their respective browsers. The reason was two-fold: They wanted to improve privacy for users where clients were passively being fingerprinted based on the UA string and things were starting to break across the web as the UA string continued to grow longer and more complex. Not to mention, minority browsers <a href="https://www.zdnet.com/article/vivaldi-to-change-user-agent-string-to-chrome-due-to-unfair-blocking/">claiming</a> that their browsers are unfairly treated can lie in their UA strings to mimic the client experience of major browsers. But they couldn’t just remove the UA string, because too many servers on the web depended on it. In fact, the plan was to cap it at “11” for macOS devices to support Big Sur, but even that broke compatibility on websites that were expecting to see version 10 so they settled on the last release of Catalina, 10.15.7. Here's an example of how seeing the UA string in a plain-text HTTP packet can change the identification of devices in SmartZone:</p>
+<p>[caption id="attachment_421" align="aligncenter" width="1034"]<img alt="" class="size-full wp-image-421" height="114" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/sz-profile-beforehttp.png" width="1034"> [My MBP is correctly identified correctly as a laptop running macOS Catalina (10.15.7) after visiting the unencrypted website, http://neverssl.com. My iPad Pro running iPadOS 14.8 is identified as a smart phone running iOS before visiting the website since DHCP was the only method used and iOS/iPadOS fingerprints match (1,121,3,6,15,114,119,252)]{style="color: #808080;"}[/caption]<br>
+[caption id="attachment_422" align="aligncenter" width="909"]<img alt="" class="size-full wp-image-422" height="106" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/sz-profile-afterhttp.png" width="909"> [After visiting http://neverssl.com, the iPad's identification changes, but is still incorrectly identified as a laptop running macOS 10.15.6 due to the UA string sent by Safari (desktop versions of websites are requested by default)]{style="color: #808080;"}[/caption]<br>
+[caption id="attachment_457" align="aligncenter" width="993"]<img alt="" class="size-full wp-image-457" height="99" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/sz-profile-mobilewebsite.png" width="993"> [By disabling "Request Desktop Website" in Settings -> Safari, the iPad is now correctly identified as a Tablet with the correct version of iPadOS (iOS) after visiting http://neverssl.com]{style="color: #808080;"}[/caption]</p>
+<p>So is client fingerprinting dead? With DHCP being somewhat unreliable and HTTP effectively rendered useless, it seems so, right? For me, the right answer is it depends. The <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> introduced a plan to still allow for fingerprinting, but in a manner that is active vs passive and a bit more secure using something called <a href="https://wicg.github.io/ua-client-hints/">User-Agent Client Hints</a> (UA-CH). This allows a client to initially only send a subset of the information found in the typical UA string but allows the server to request for more information as needed. Sounds great. The problem is, this only works over TLS, meaning the HTTP headers that are sent back and forth between the client and server will be encrypted and unable to be seen unless a device is acting as a proxy server for the client's connection. This is unlikely to happen with wireless controllers or APs so while this appears to fix their problem, it doesn't fix ours. So where do we go from here? Do we go back to just relying on MAC OUI and DHCP as a best effort way of identifying devices and ignore the UA string? Should we even be using device type as a means of providing specialized network access or policy? Probably not, because it wasn't foolproof even with HTTP in the mix as I illustrated above. I found this problem rather interesting, but I haven't seen much mentioned about this within the Wi-Fi community so I'm genuinely curious what everyone's thoughts are about this. Is it just a big "I don't care." or is there more to this? Reach out on <a href="https://twitter.com/packetologist">Twitter</a> to start a conversation!</p>
+<p>Ps. Special thanks to <a href="https://twitter.com/DarrellDeRosia">Darrell DeRosia</a>, <a href="https://twitter.com/UKDanJones">Dan Jones</a>, and <a href="https://twitter.com/WirelessJimP">Jim Palmer</a></p>
+<p>Sources: <a href="https://groups.google.com/a/chromium.org/g/blink-dev/c/-2JIRNMWJ7s/m/yHe4tQNLCgAJ?pli=1">Google discussion about capping the UA string</a> , <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1679929">Mozilla discussion</a> , <a href="https://bugs.webkit.org/show_bug.cgi?id=216593">Safari discussion</a> , <a href="https://web.dev/user-agent-client-hints/">Improving user privacy and developer experience with User-Agent Client Hints</a> , <a href="https://wicg.github.io/client-hints-infrastructure/">Client Hints Infrastructure</a></p>
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
+
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is , check out more <a href="">about me</a>.
+      </p>
+  </div>
+
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="#" class="uk-icon-button uk-icon-justify uk-icon-You can add links in your config file"></a>
+          <a href="#" class="uk-icon-button uk-icon-justify uk-icon-Another social link"></a>
+      </div>
+  </div>
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
+
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+          <li><a href="#" class="uk-icon-external-link">You can modify those links in your config file</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+        </ul>
+    </div>
+</div>
+  </body>
+</html>

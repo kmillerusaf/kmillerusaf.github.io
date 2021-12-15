@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <base href="">
+
+    <!--
+    favicons generated with:
+    <http://realfavicongenerator.net>
+
+    if you want to generate your own favicon, use this custom path:
+    /theme/ico/favicon/
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/ico/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/ico/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/ico/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/ico/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/ico/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/ico/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/ico/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/ico/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/theme/ico/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/theme/ico/favicon/manifest.json">
+    <link rel="mask-icon" href="/theme/ico/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/theme/ico/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/theme/ico/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/ico/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    <script src="/theme/js/lib/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="/theme/css/uikit.min.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/custom.min.css" />
+    <!-- default pygment style is the 'default' style -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
+    <script src="/theme/js/uikit.min.js"></script>
+    <title>Icmp redirects and the importance of network analysis | the packetologist</title>
+  <meta name="description" content="I recently made some changes to the setup of my home network. Instead of a Linksys E3200 wireless router providing both wired and wireless access to the..." />  <meta name="category" content="TCP/IP, Troubleshooting" /> 
+  </head>
+  <body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <nav class="uk-navbar uk-margin-large-bottom">
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+        </ul>
+        <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
+        <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
+    </nav>
+    <div class="uk-grid" data-uk-grid-margin="">
+        <main class="uk-width-medium-3-4">
+<article>
+<div class="uk-article">
+    <header>
+    <h1 class=" uk-article-title">
+        <a href="/icmp-redirects-and-network-analysis.html">ICMP Redirects and the importance of Network Analysis</a>
+    </h1>
+    <p class="uk-article-meta">
+    Published on   <time datetime="2013-07-21">Sun 21 July 2013</time>
+        by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
+    posted in <a href="/category/tcpip-troubleshooting.html">TCP/IP, Troubleshooting</a>
+    <br/>
+
+    </p>
+    </header>
+    <p>I recently made some changes to the setup of my home network. Instead of a Linksys E3200 wireless router providing both wired and wireless access to the LAN and Internet, I added a Cisco ASA 5505 and a <a href="http://www.netgear.com/business/products/switches/smart-switches/smart-switches/GS108T.aspx">Netgear GS108T</a> switch to the mix. The network now looks like this:<code>&lt;!--more--&gt;</code></p>
+<p><a href="http://www.thepacketologist.com/wp-content/uploads/2013/07/home-net21.jpg"><img alt="home-net" class="aligncenter size-medium wp-image-204" height="300" src="http://www.thepacketologist.com/wp-content/uploads/2013/07/home-net21-237x300.jpg" width="237"></a></p>
+<p>At first, everything appeared to be working fine; everyone in the house could get to the Internet with their devices and there were no major complaints. No SLAs broken. Great right? Well, not so fast... When I started using my laptop on the wireless network, I noticed a bit more latency getting to websites than before the changes so I decided to fire up <a href="http://www.wireshark.org">Wireshark</a> to take a closer look.</p>
+<p>Just as I suspected, I unintentionally added an additional hop to the wireless network. My wireless router was still advertising to its clients that it was the default gateway to other networks when the ASA really was. Because of this, the wireless router sent ICMP redirects to the clients informing them that there was a better option for its gateway, the ASA. This can be seen in the image below:</p>
+<p><a href="http://www.thepacketologist.com/wp-content/uploads/2013/07/wireshark-icmp-redirect.jpg"><img alt="wireshark-icmp-redirect" class="aligncenter size-medium wp-image-193" height="179" src="http://www.thepacketologist.com/wp-content/uploads/2013/07/wireshark-icmp-redirect-300x179.jpg" width="300"></a></p>
+<p>Here's a sample traceroute from my laptop that displays the additional hop:</p>
+<p><code>traceroute to 208.67.222.222 (208.67.222.222), 64 hops max 1 192.168.2.254 (192.168.2.254) 3.160ms 3.835ms 2.973ms 2 X.X.X.X (X.X.X.X) 44.450ms 29.405ms 30.091ms 3 24.31.198.121 (24.31.198.121) 36.104ms 26.355ms 25.857ms 4 24.93.64.42 (24.93.64.42) 28.082ms 36.272ms 30.764ms 5 107.14.19.46 (107.14.19.46) 36.507ms 45.261ms 91.498ms 6 66.109.6.171 (66.109.6.171) 81.673ms 53.704ms 44.688ms 7 66.109.9.70 (66.109.9.70) 37.913ms 68.330ms 48.143ms 8 4.69.150.126 (4.69.150.126) 238.618ms 57.953ms 113.808ms 9 4.69.148.253 (4.69.148.253) 54.227ms 40.693ms 57.324ms 10 4.69.132.86 (4.69.132.86) 85.640ms 110.036ms 43.359ms 11 4.69.134.138 (4.69.134.138) 46.051ms 78.840ms 41.641ms 12 4.69.149.143 (4.69.149.143) 57.344ms 46.369ms 56.308ms 13 4.53.112.158 (4.53.112.158) 142.396ms 46.091ms 104.501ms 14 208.67.222.222 (208.67.222.222) 46.732ms 50.361ms 61.831ms</code></p>
+<p>So what exactly is an ICMP redirect? A simple explanation is that it is a method for a router to inform a host that a better routing option exists on the same network. For example, let's say you have Host1, RouterA, and RouterB on the same network segment. Host1's default gateway is set to RouterA and RouterA's gateway is set to RouterB. Since both routers are on the same segment as Host1, wouldn't it be more efficient to bypass RouterA and direct its packets towards RouterB? If you are nodding yes, you would be correct and ICMP redirects are the way routers convey this message to hosts.</p>
+<p>I fixed this issue by making one small change in the firmware (DD-WRT) of my wireless router. Under the "Services" tab, I added the line <strong><em>dhcp-option=3,192.168.2.1</em></strong> in the "Additional DNSMasq Options" field to force the router to specify the ASA as the default gateway and not itself to its clients. Now a traceroute from my laptop is one hop shorter and web pages are loading more quickly. See below:</p>
+<p><code>traceroute to 208.67.222.222 (208.67.222.222), 64 hops max  1   X.X.X.X (X.X.X.X) 87.419ms 31.485ms 30.670ms   2   24.31.198.121 (24.31.198.121) 23.339ms 31.458ms 55.681ms  3   24.93.64.42 (24.93.64.42) 30.879ms 25.338ms 26.811ms  4   107.14.19.46 (107.14.19.46) 36.414ms 31.504ms 32.405ms  5   66.109.6.171 (66.109.6.171) 32.429ms 32.494ms 33.533ms  6   66.109.9.70 (66.109.9.70) 31.702ms 29.988ms 35.393ms  7   4.69.150.126 (4.69.150.126) 41.189ms 55.245ms 44.268ms  8   4.69.148.253 (4.69.148.253) 41.788ms 42.587ms 40.527ms  9   4.69.132.86 (4.69.132.86) 41.470ms 45.495ms 40.895ms  10   4.69.134.138 (4.69.134.138) 41.021ms 41.416ms 41.649ms  11   4.69.149.143 (4.69.149.143) 39.782ms 70.644ms 42.623ms  12   *  4.53.112.158 (4.53.112.158) 40.409ms 41.548ms  13   208.67.222.222 (208.67.222.222) 41.769ms 43.895ms 47.380ms</code></p>
+<p>A year or so ago, I probably wouldn't have noticed this new, small delay in my web requests let alone known why it was happening, but I credit a few things for my growth. First I credit the <a href="http://www.tcpipguide.com/">TCP/IP Guide</a> where I learned what an ICMP redirect was. Second, I credit Gerald Combs and everyone who contributes to making Wireshark such an easy to use network analysis tool. Laura Chappell is someone who comes to mind as a key contributor to the Wireshark project-- If you haven't checked out her <a href="http://www.wiresharkbook.com">Wireshark books</a> or free <a href="https://www.lcuportal2.com/index.php?option=com_content&amp;view=category&amp;layout=blog&amp;id=49&amp;Itemid=75">webinars</a>, I encourage you to do so as soon as you possibly can. The importance of network analysis cannot be overstated. Whether at home or at your place of employment, seeing the packets while you troubleshoot an issue is invaluable.</p>
+<p>Have you ever dealt with an ICMP redirect issue? I'd love to hear about it!</p>
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
+
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is , check out more <a href="">about me</a>.
+      </p>
+  </div>
+
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="#" class="uk-icon-button uk-icon-justify uk-icon-You can add links in your config file"></a>
+          <a href="#" class="uk-icon-button uk-icon-justify uk-icon-Another social link"></a>
+      </div>
+  </div>
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
+
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+          <li><a href="#" class="uk-icon-external-link">You can modify those links in your config file</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+        </ul>
+    </div>
+</div>
+  </body>
+</html>
