@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <base href="">
+
+    <!--
+    favicons generated with:
+    <http://realfavicongenerator.net>
+
+    if you want to generate your own favicon, use this custom path:
+    /theme/ico/favicon/
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/ico/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/ico/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/ico/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/ico/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/ico/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/ico/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/ico/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/ico/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/theme/ico/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/theme/ico/favicon/manifest.json">
+    <link rel="mask-icon" href="/theme/ico/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/theme/ico/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/theme/ico/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/ico/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    <script src="/theme/js/lib/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="/theme/css/uikit.min.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/custom.min.css" />
+    <!-- default pygment style is the 'default' style -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
+    <script src="/theme/js/uikit.min.js"></script>
+    <title>Ghosts in the network | the packetologist</title>
+  <meta name="description" content="It all started with an e-mail from a co-worker on a recent Saturday afternoon, shortly after we finished performing Windows updates on all of our servers...." />  <meta name="category" content="Network Monitoring, Troubleshooting" /> 
+  </head>
+  <body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <nav class="uk-navbar uk-margin-large-bottom">
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+    <li><a href="/pages/about-me.html">About me</a></li>
+    <li><a href="/pages/pif-scholarship.html">Pay It Forward Scholarship</a></li>
+        </ul>
+        <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
+        <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
+    </nav>
+    <div class="uk-grid" data-uk-grid-margin="">
+        <main class="uk-width-medium-3-4">
+<article>
+<div class="uk-article">
+    <header>
+    <h1 class=" uk-article-title">
+        <a href="/ghosts-in-the-network.html">Ghosts in the network</a>
+    </h1>
+    <p class="uk-article-meta">
+    Published on   <time datetime="2015-04-21">Tue 21 April 2015</time>
+        by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
+    posted in <a href="/category/network-monitoring-troubleshooting.html">Network Monitoring, Troubleshooting</a>
+    <br/>
+
+    </p>
+    </header>
+    <p>It all started with an e-mail from a co-worker on a recent Saturday afternoon, shortly after we finished performing Windows updates on all of our servers. It read something like this:</p>
+<blockquote>
+<p>"Syslog server's C: drive ran out of space so I created an additional drive with 20GB of space and moved all of the logs to it."</p>
+</blockquote>
+<p>Now I've only been with this new company for 4 months now, but one of the first things I did when I began learning the network was to take a look at our syslog server to see how it was configured and for baselining how many logs in an hour and day were normal for our network. So when I saw that the drive ran out of space with the amount of syslogs normally generated per day, it immediately raised an alarm.</p>
+<p>First thing I did was verify that the original syslog drive was truly out of space and it was. What I found was unusual. Shortly after we completed Windows updates, the syslog server started receiving logs at an abnormally high rate. I'm talking going from an average of \~2,000 logs/hr to \~19,000 logs/hr. So the next thing I did was take a look at the logs to see exactly what was triggering this large influx of logs. I found 3 different source IPs in the logs that kept appearing with the same type of syslog and from the same device, our firewall:</p>
+<p><code>%ASA-4-419002: Received duplicate TCP SYN from *in_interface* :* 
+src_address* /* src_port* to *out_interface*:* dest_address* /* dest_port* 
+with different initial sequence number.</code></p>
+<p><a href="http://www.cisco.com/c/en/us/td/docs/security/asa/syslog-guide/syslogs/logmsgs1.html#pgfId-4773665">Cisco ASA Syslog Guide</a></p>
+<p>Each source and destination IP address pair was unique and so was the destination port. One was destined for TCP port 17777, another to TCP/UDP port 161, and the last to TCP port 6711. Both the source and destination IP address in each IP address pair were private IP addresses with the source IP address being a valid IP address on our network and the destination IP addresses being invalid on our network; the destination networks did not exist. Because both the source and destination IPs were private, we immediately felt like this wasn't a spoofing attack or something else much more malicious. However, we still could not explain why the traffic was occurring. So we took a methodical approach to figuring out exactly that.</p>
+<p>First step was to confirm that the traffic was actually occurring. We don't have a huge network or a lot of the cool tools out there to capture traffic so we did it the "old school" way by installing <a href="http://www.wireshark.org">Wireshark</a> on the 3 servers. We knew the destination IPs and the destination ports so setting up a capture filter for that criteria made sense to avoid capturing everything and eventually running into disk space or memory issues. On 2 of the 3 servers, we were able to confirm this pretty quickly. On the last server, the server appeared to only generate traffic during sporadic times.</p>
+<p><a class="wp-image-288" href="http://www.thepacketologist.com/wp-content/uploads/2015/04/ScreenHunter_04-Apr.-20-10.48.jpg"></a></p>
+<p>The next step was figuring out what was causing these different sets of traffic on all 3 servers. Wireshark confirmed that it was happening, but that's where the help ended. Next came a familiar tool, netstat. By using netstat, we could determine which process or service was the cause. This worked fantastically for the first 2 servers because the traffic was more continuous, however, how was I supposed to figure out what process was being used if I wasn't available to run the command when the traffic was actually occurring on the 3rd server?</p>
+<p>If you read the netstat help for the command, it tells you exactly how to do this:</p>
+<p><img alt="" class="wp-image-287" src="http://www.thepacketologist.com/wp-content/uploads/2015/04/ScreenHunter_03-Apr.-20-10.44.jpg"></p>
+<p>I decided to run the netstat command while refreshing  it every 10 seconds and redirect it to a text file using the below command. [<strong><em>*NOTE*: You will need to run cmd prompt as an administrator to use the -b switch</em></strong>]{style="color: #ff0000;"}</p>
+<div class="lang:batch decode:true highlight"><pre><span></span><code>netstat -abn 10 &gt; %userprofile%\Desktop\filename.txt
+</code></pre></div>
+
+<p>After a few hours, I was eventually able to get a hit by searching the text file for the destination port and found the offending process. After a little more research, we were able to determine the exact cause; an old device on an old, non-existent network that was configured in our Track It! server's inventory and being scanned (or attempting to) for auditing purposes. 1 check box turned auditing off for that particular device and the associated traffic ceased. For those still with me and curious, the other 2 servers ended up being an old database remnant in our SolarWinds NPM server that had to be cleared by running some commands against the database and Cisco DCNM software installed on our AAA server that was trying to reach out to some old IP address via SNMP. With all that being said, the traffic was probably always happening, however, a combination of new code installed on our ASA the Tuesday before and the restarting of the servers after performing Windows updates probably triggered this barrage of traffic.</p>
+<p>This was an interesting case and I definitely learned a few things about our network and the tools that I've been using for a few years now. In the end, I was just relieved to know that it wasn't something more malicious, but pleased that I was able to utilize my skill set to track down the origin.</p>
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
+
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/me.jpeg"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is Keith, check out more <a href="authors.html">about me</a>.
+      </p>
+  </div>
+
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="https://twitter.com/packetologist" class="uk-icon-button uk-icon-justify uk-icon-twitter"></a>
+          <a href="https://www.linkedin.com/in/keith-miller-b761073a/" class="uk-icon-button uk-icon-justify uk-icon-linkedin"></a>
+      </div>
+  </div>
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/python.html" class="uk-icon-tag">python</a></li>
+          <li><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+          <li><a href="/tag/lldp.html" class="uk-icon-tag">lldp</a></li>
+          <li><a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a></li>
+          <li><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
+
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+          <li><a href="#" class="uk-icon-external-link">You can modify those links in your config file</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+    <li><a href="/pages/about-me.html">About me</a></li>
+    <li><a href="/pages/pif-scholarship.html">Pay It Forward Scholarship</a></li>
+        </ul>
+    </div>
+</div>
+  </body>
+</html>

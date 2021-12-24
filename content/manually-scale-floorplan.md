@@ -1,0 +1,47 @@
+Title: Manually scaling a floor plan
+Date: 2021-10-08 08:34
+Author: kmiller
+Category: Wi-Fi, Work related
+Tags: ekahau, wi-fi
+Slug: manually-scale-floorplan
+Status: published
+
+I was recently asked to do a predictive design for a warehouse. Sounds innocent enough, except the floor plan was a picture of the floor plan made in an Excel spreadsheet. Up until this point, I had never dealt with something like this, but it immediately reminded me of this exchange on Twitter between Eduard Petrov and Vasco Costa a day or two before receiving it:
+
+![](https://www.thepacketologist.com/wp-content/uploads/2021/10/twitter-exchange.png){.wp-image-494}
+
+When I saw their conversation, I thought to myself, "I'm glad I don't have to deal with anything like that!" Of course, I jinxed myself and all I could do was laugh (ok, cry) at the irony.
+
+The tool I was planning to use for the design was Ekahau Pro, but I'm sure this next step is appropriate for any Wi-Fi design tool which is to set an accurate scale of your floor plans. Without proper scaling, your RF modeling will be way off so what's the point? I felt pretty lucky that the floor plan had the building perimeter measurements on it and that they were spot on with what I came up with in Google Earth as you can see in the screen shots below.
+
+![Total length of 450 ft when adding the 2 sides of 227 and 223 ft together](https://www.thepacketologist.com/wp-content/uploads/2021/10/warehouse-excel-length-1-1024x361.png){.wp-image-501 width="1024" height="361"}
+
+![Length of 450 ft in Google Earth matched floor plan annotation](https://www.thepacketologist.com/wp-content/uploads/2021/10/google-earth-length-1024x563.png){.wp-image-498 width="1024" height="563"}
+
+![Width of 174 ft matched width floor plan annotation](https://www.thepacketologist.com/wp-content/uploads/2021/10/google-earth-width-1024x564.png){.wp-image-499 width="1024" height="564"}
+
+In Ekahau, I started by adding the floor plan as a map and scaling the longest known distance which was the length of the building. I almost always sanity check a few measurements after setting the scale, especially if I was able to go on site myself to gather measurements. In this case, all I really had at my disposal to check was the width of the building which should have been 174 ft, but what I saw was much different as you'll see below.
+
+![Scaled the length of the building to 450 ft](https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-prefix-scaled-length-1024x370.png){.wp-image-503 width="1024" height="370"}
+
+![Width was about 30 ft off (145 ft) when the length was scaled to 450 ft](https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-prefix-scaled-width-1024x375.png){.wp-image-504 width="1024" height="375"}
+
+If I reversed things and set the scale of the building's width to 174 ft, things got even worse!
+
+![Length of the building was now shown as 539 ft (89 ft off) when scaling the width of the building to 174 ft](https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-prefix-scaled-changing-1-1024x126.png){.wp-image-506 width="1024" height="126"}
+
+At first, I didn't know what to do, but I did know that I didn't want to start my design off on the wrong foot by using a bad scale. I thought about it for a bit, complained to myself and some coworkers (you know who you are and thanks), and then an idea popped into my mind that a) I wasn't sure was going to work and b) I knew would take me a fair amount of time to do. That idea was to rebuild the floor plan using the correct LxW ratio. I chose [draw.io](https://draw.io) for this task because it's free, I was already familiar with it, and it was the only tool I had available to me. I started by creating a rectangle (just like the shape of the building) that was fairly large, but had a length with a nice easy number to work with of 1000 pt. I then divided 450 by 174 (result: 2.59) to determine how much to divide 1000 by to give me the width of the building which ended up being 386 pt.
+
+![1000 pt x 386 pt](https://www.thepacketologist.com/wp-content/uploads/2021/10/drawio-outline-1024x503.png){.wp-image-507 width="1024" height="503"}
+
+I won't bore you, but I did a save here to double-check the scaling in Ekahau before moving forward and it was correct! Now came the hard part... Besides the outside perimeter, the only other measurements I had on the floor plan were the aisle widths. But if you look carefully, aisles that are supposedly different widths look exactly the same! At this point, I knew this was going to be a best effort exercise, but I wanted to get things as close to accurate as possible. So I looked up what the conversion was from pt to ft and sure enough there's an online calculator for that.
+
+![386 \* 0.4467 is roughly 172 so while not perfect, it's pretty close!](https://www.thepacketologist.com/wp-content/uploads/2021/10/pt-to-ft.png){.wp-image-508}
+
+I now knew that 1pt is equal to roughly 0.001166 ft which helped me when trying to draw the aisles, racks, and palletized areas to scale in draw.io. It took some time, but I finally finished and here is the finished product in Ekahau with scaling shown:
+
+![The scaling ended up spot on and even the aisles look appropriate when compared to each other](https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-scaled-width-1-1024x453.png){.wp-image-510 width="1024" height="453"}
+
+Now, I know some of the naysayers are going to say that I shouldn't have gone through these measures (pun intended) and should have requested a proper floor plan. You're right. I know others are going to say that I could have done it x, y, and z other ways. You're probably right. However, they didn't have a better floor plan and this is the idea that came to mind when I thought about trying to solve this problem. Ultimately, I sent the design back to the partner with a big fat disclaimer stating that I could not validate any of the measurements inside and that they should triple check everything before putting a single AP in. Was it a waste of time? Probably. But it was the task given to me and as always, I wanted to do the best job I could. Did I accomplish that? I don't know. It feels like it, but I'll probably never see that warehouse in person to verify so I'll just have to live in my own head about it. I do feel that I now have another trick in the bag if I ever need it again, but I'd definitely prefer not to!
+
+What are your thoughts? Was this helpful at all to you? Feel free to hit me up on [Twitter](https://twitter.com/packetologist)

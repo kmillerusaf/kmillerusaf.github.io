@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <base href="">
+
+    <!--
+    favicons generated with:
+    <http://realfavicongenerator.net>
+
+    if you want to generate your own favicon, use this custom path:
+    /theme/ico/favicon/
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/ico/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/ico/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/ico/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/ico/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/ico/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/ico/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/ico/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/ico/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/theme/ico/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/theme/ico/favicon/manifest.json">
+    <link rel="mask-icon" href="/theme/ico/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/theme/ico/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/theme/ico/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/ico/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    <script src="/theme/js/lib/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="/theme/css/uikit.min.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/custom.min.css" />
+    <!-- default pygment style is the 'default' style -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
+    <script src="/theme/js/uikit.min.js"></script>
+    <title>Manually scaling a floor plan | the packetologist</title>
+   <meta name="tags" content="ekahau, wi-fi" />  <meta name="description" content="I was recently asked to do a predictive design for a warehouse. Sounds innocent enough, except the floor plan was a picture of the floor plan made in an..." />  <meta name="category" content="Wi-Fi, Work related" /> 
+  </head>
+  <body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <nav class="uk-navbar uk-margin-large-bottom">
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+    <li><a href="/pages/about-me.html">About me</a></li>
+    <li><a href="/pages/pif-scholarship.html">Pay It Forward Scholarship</a></li>
+        </ul>
+        <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
+        <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
+    </nav>
+    <div class="uk-grid" data-uk-grid-margin="">
+        <main class="uk-width-medium-3-4">
+<article>
+<div class="uk-article">
+    <header>
+    <h1 class=" uk-article-title">
+        <a href="/manually-scale-floorplan.html">Manually scaling a floor plan</a>
+    </h1>
+    <p class="uk-article-meta">
+    Published on   <time datetime="2021-10-08">Fri 08 October 2021</time>
+        by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
+    posted in <a href="/category/wi-fi-work-related.html">Wi-Fi, Work related</a>
+    <br/>
+    <a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a>
+    <a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a>
+
+    </p>
+    </header>
+    <p>I was recently asked to do a predictive design for a warehouse. Sounds innocent enough, except the floor plan was a picture of the floor plan made in an Excel spreadsheet. Up until this point, I had never dealt with something like this, but it immediately reminded me of this exchange on Twitter between Eduard Petrov and Vasco Costa a day or two before receiving it:</p>
+<p><img alt="" class="wp-image-494" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/twitter-exchange.png"></p>
+<p>When I saw their conversation, I thought to myself, "I'm glad I don't have to deal with anything like that!" Of course, I jinxed myself and all I could do was laugh (ok, cry) at the irony.</p>
+<p>The tool I was planning to use for the design was Ekahau Pro, but I'm sure this next step is appropriate for any Wi-Fi design tool which is to set an accurate scale of your floor plans. Without proper scaling, your RF modeling will be way off so what's the point? I felt pretty lucky that the floor plan had the building perimeter measurements on it and that they were spot on with what I came up with in Google Earth as you can see in the screen shots below.</p>
+<p><img alt="Total length of 450 ft when adding the 2 sides of 227 and 223 ft together" class="wp-image-501" height="361" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/warehouse-excel-length-1-1024x361.png" width="1024"></p>
+<p><img alt="Length of 450 ft in Google Earth matched floor plan annotation" class="wp-image-498" height="563" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/google-earth-length-1024x563.png" width="1024"></p>
+<p><img alt="Width of 174 ft matched width floor plan annotation" class="wp-image-499" height="564" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/google-earth-width-1024x564.png" width="1024"></p>
+<p>In Ekahau, I started by adding the floor plan as a map and scaling the longest known distance which was the length of the building. I almost always sanity check a few measurements after setting the scale, especially if I was able to go on site myself to gather measurements. In this case, all I really had at my disposal to check was the width of the building which should have been 174 ft, but what I saw was much different as you'll see below.</p>
+<p><img alt="Scaled the length of the building to 450 ft" class="wp-image-503" height="370" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-prefix-scaled-length-1024x370.png" width="1024"></p>
+<p><img alt="Width was about 30 ft off (145 ft) when the length was scaled to 450 ft" class="wp-image-504" height="375" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-prefix-scaled-width-1024x375.png" width="1024"></p>
+<p>If I reversed things and set the scale of the building's width to 174 ft, things got even worse!</p>
+<p><img alt="Length of the building was now shown as 539 ft (89 ft off) when scaling the width of the building to 174 ft" class="wp-image-506" height="126" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-prefix-scaled-changing-1-1024x126.png" width="1024"></p>
+<p>At first, I didn't know what to do, but I did know that I didn't want to start my design off on the wrong foot by using a bad scale. I thought about it for a bit, complained to myself and some coworkers (you know who you are and thanks), and then an idea popped into my mind that a) I wasn't sure was going to work and b) I knew would take me a fair amount of time to do. That idea was to rebuild the floor plan using the correct LxW ratio. I chose <a href="https://draw.io">draw.io</a> for this task because it's free, I was already familiar with it, and it was the only tool I had available to me. I started by creating a rectangle (just like the shape of the building) that was fairly large, but had a length with a nice easy number to work with of 1000 pt. I then divided 450 by 174 (result: 2.59) to determine how much to divide 1000 by to give me the width of the building which ended up being 386 pt.</p>
+<p><img alt="1000 pt x 386 pt" class="wp-image-507" height="503" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/drawio-outline-1024x503.png" width="1024"></p>
+<p>I won't bore you, but I did a save here to double-check the scaling in Ekahau before moving forward and it was correct! Now came the hard part... Besides the outside perimeter, the only other measurements I had on the floor plan were the aisle widths. But if you look carefully, aisles that are supposedly different widths look exactly the same! At this point, I knew this was going to be a best effort exercise, but I wanted to get things as close to accurate as possible. So I looked up what the conversion was from pt to ft and sure enough there's an online calculator for that.</p>
+<p><img alt="386 * 0.4467 is roughly 172 so while not perfect, it's pretty close!" class="wp-image-508" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/pt-to-ft.png"></p>
+<p>I now knew that 1pt is equal to roughly 0.001166 ft which helped me when trying to draw the aisles, racks, and palletized areas to scale in draw.io. It took some time, but I finally finished and here is the finished product in Ekahau with scaling shown:</p>
+<p><img alt="The scaling ended up spot on and even the aisles look appropriate when compared to each other" class="wp-image-510" height="453" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/ekahau-scaled-width-1-1024x453.png" width="1024"></p>
+<p>Now, I know some of the naysayers are going to say that I shouldn't have gone through these measures (pun intended) and should have requested a proper floor plan. You're right. I know others are going to say that I could have done it x, y, and z other ways. You're probably right. However, they didn't have a better floor plan and this is the idea that came to mind when I thought about trying to solve this problem. Ultimately, I sent the design back to the partner with a big fat disclaimer stating that I could not validate any of the measurements inside and that they should triple check everything before putting a single AP in. Was it a waste of time? Probably. But it was the task given to me and as always, I wanted to do the best job I could. Did I accomplish that? I don't know. It feels like it, but I'll probably never see that warehouse in person to verify so I'll just have to live in my own head about it. I do feel that I now have another trick in the bag if I ever need it again, but I'd definitely prefer not to!</p>
+<p>What are your thoughts? Was this helpful at all to you? Feel free to hit me up on <a href="https://twitter.com/packetologist">Twitter</a></p>
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
+
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/me.jpeg"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is Keith, check out more <a href="authors.html">about me</a>.
+      </p>
+  </div>
+
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="https://twitter.com/packetologist" class="uk-icon-button uk-icon-justify uk-icon-twitter"></a>
+          <a href="https://www.linkedin.com/in/keith-miller-b761073a/" class="uk-icon-button uk-icon-justify uk-icon-linkedin"></a>
+      </div>
+  </div>
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/python.html" class="uk-icon-tag">python</a></li>
+          <li><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+          <li><a href="/tag/lldp.html" class="uk-icon-tag">lldp</a></li>
+          <li><a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a></li>
+          <li><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
+
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+          <li><a href="#" class="uk-icon-external-link">You can modify those links in your config file</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+    <li><a href="/pages/about-me.html">About me</a></li>
+    <li><a href="/pages/pif-scholarship.html">Pay It Forward Scholarship</a></li>
+        </ul>
+    </div>
+</div>
+  </body>
+</html>

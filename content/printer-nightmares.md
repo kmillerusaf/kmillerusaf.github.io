@@ -1,0 +1,25 @@
+Title: Printer Nightmares
+Date: 2013-01-25 20:54
+Author: kmiller
+Category: Troubleshooting, Work related
+Slug: printer-nightmares
+Status: published
+
+Ever watched the TV show Kitchen Nightmares featuring the chef, Gordon Ramsey? One of the best chefs in the world visited struggling restaurants for a week in an attempt to get them back on the right track. Overwhelmed by the sheer negligence of the restaurant owners, Gordon struggles to stay a couple of days let alone an entire week. Eventually, a breakthrough occurs and he's able to just grin and bare it enough to get through the week just like many of us do regularly. Sound like a good show? I think I've got a better idea! `<!--more-->`{=html}How about a show documenting IT professionals as they troubleshoot and attempt to fix printers? I'd watch, even if it was just to see others share the pain that I've been through over the years. Sometimes, I think these companies do it on purpose. Dozens of different printer vendors each with tens of different printer models and different methods of configuration == pure horror. Since the show is my idea, I guess I'll go first by sharing my latest episode that happened today at work. Enjoy!
+
+A coworker of mine was having a problem getting a printer on the network. It was recently moved into a new building so with that came a new switch with new configs, new patch panel, etc, etc. My coworker did everything they could to troubleshoot before asking me to help and from what I saw initially, everything checked out with the switch's configuration. On the switch, I verified that the VLAN assignment was correct, the SVI of the VLAN was configured with a valid DHCP helper address, and that the switch port was in an up/up state. The mac-address of the printer was seen on the port, but no arp entries or DHCP leases were found so we decided to go look at the printer in person.
+
+Once we were in front of the printer, the first thing we did was print out a configuration page. The printer was an HP and you had to navigate through the menus using several different combinations of buttons. One button to change the menu, one to change the value of a menu item that you wanted to change, and one to select the menu items when you're ready. If you went past a configuration setting, you had to start from the beginning by changing values and going through the process all over again. Patience was definitely a virtue in this case. Network settings on the jet direct card looked okay. TCP/IP was on and configured to use BOOTP. However, the configuration page said differently. The IP address was showing the address of "192.0.0.192" and no matter what we did, it never changed. We even went as far as resetting to factory defaults and power cycling the printer. Nothing, same IP! So we decided to use one of my new favorite toys that I discovered while listening to the [Class-C Block podcast](http://classcblock.com/). It's a Dualcomm 5-port switch with a built in monitoring port and is powered by USB. Check it out [here](http://www.dual-comm.com/port-mirroring-LAN_switch.htm). After power cycling the printer, we saw at least 5 different BOOTP request packets in Wireshark from the printer looking for a server. No replies ever came back. Out of desperation, we set the laptop's IP to an address on the 192.0.0.0/24 subnet, connected the laptop directly to the printer, and pointed the web browser to the printer's address.
+
+The printer's webgui came up after Java finished loading (cringe) and we clicked on the "Administration" button. Looking at the tabbed menu options, the "Configuration" menu seemed like the best option. Sure enough, the printer was configured for a manual address of 192.0.0.192. We configured it to use DHCP instead of BOOTP, applied the changes and power cycled the printer. Once the printer was fully powered up, we printed another configuration page and what do you know... It had a valid IP address on our network. Problem solved after roughly 30 mins of troubleshooting.
+
+**What I learned from this:**
+
+-   Printers suck
+-   That IP address of 192.0.0.192 is actually documented on HP's site. It's the IP address assigned to the network card when the printer is reset to factory settings.
+-   Packets never lie
+-   Printers suck
+
+[The moral of this story is that I hate printers and I'm sure all of you share my sentiment. Each printer seems to be different and it's never a quick fix. It's unfortunate that they are a necessary evil but who knows, paper and printing might not exist in the not so distant future. E-books are really gaining in popularity. So what do you think? With all the junk on TV, would you be willing to watch these disasters too? :)]{style="line-height: 1.714285714; font-size: 1rem;"}
+
+As always, thanks for reading. See you next time!
