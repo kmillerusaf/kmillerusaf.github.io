@@ -1,5 +1,0 @@
-.gitignore
-.gitmodules
-__pycache__
-Makefile
-output/
