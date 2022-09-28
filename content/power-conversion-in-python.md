@@ -1,7 +1,7 @@
 Title: Building a power conversion tool in Python
 Date: 2021-10-25 09:22
 Author: kmiller
-Category: Uncategorized, Wi-Fi
+Category: Wi-Fi
 Tags: python, wi-fi
 Slug: power-conversion-in-python
 Status: published
