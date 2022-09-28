@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="generator" content="Pelican" />
+        <title>Correlation != Causation</title>
+        <link rel="stylesheet" href="/theme/css/main.css" />
+        <link href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="A Pelican Blog Atom Feed" />
+        <meta name="description" content="This morning, I tweeted the message below without much context: With the 280 character limit of Twitter (hard to believe it used to be 140),..." />
+</head>
+
+<body id="index" class="home">
+        <header id="banner" class="body">
+                <h1><a href="/">A Pelican Blog</a></h1>
+                <nav><ul>
+                    <li><a href="/pages/about-me-the-packetologist.html">About me | the packetologist</a></li>
+                    <li><a href="/pages/pay-it-forward-scholarship-the-packetologist.html">Pay It Forward Scholarship | the packetologist</a></li>
+                    <li class="active"><a href="/category/troubleshooting.html">Troubleshooting</a></li>
+                </ul></nav>
+        </header><!-- /#banner -->
+<section id="content" class="body">
+  <article>
+    <header>
+      <h1 class="entry-title">
+        <a href="/causation-isnt-causation.html" rel="bookmark"
+           title="Permalink to Correlation != Causation">Correlation != Causation</a></h1>
+    </header>
+
+    <div class="entry-content">
+<footer class="post-info">
+        <abbr class="published" title="2022-09-27T20:20:00+00:00">
+                Published: Tue 27 September 2022
+        </abbr>
+
+        <address class="vcard author">
+                By                         <a class="url fn" href="/author/keith-miller.html">Keith Miller</a>
+        </address>
+<p>In <a href="/category/troubleshooting.html">Troubleshooting</a>.</p>
+<p>tags: <a href="/tag/wi-fi.html">wi-fi</a> </p>
+</footer><!-- /.post-info -->      <p>This morning, I tweeted the message below without much context:</p>
+<p><img alt="" src="/Users/mills/py-projects/thepacketologist/content/images/tweet.png"></p>
+<p>With the 280 character limit of Twitter (hard to believe it used to be 140), sometimes it's difficult to fully express an idea or the context behind it and instead of trying to create a messy, multi-threaded tweet, I just left it there as food for thought. But here on my blog, I can elaborate further on why this situation stood out to me and how it applies to you, the reader, who's most likely in an IT related role.</p>
+<p>So going back to what happened, I want to be clear that the "leak" was very small, almost imperceptible. However, it was large enough to be picked up by the water company’s monitoring system and it was within minutes to maybe an hour from when our son arrived at our house. It wasn't until 2-3 days later that my wife and I received the e-mail with the alert and we both immediately thought that it had to be related to our son’s visit over the weekend. We checked every faucet, toilet, and showerhead that he might have used and we didn't notice anything out of place or any build-up of moisture in the sinks or tubs. For good measure, we even checked the water spigots outside since one of them is exposed to the public and we know how kids can be sometimes… Nothing. Then it hit me… The only place we hadn't checked was our own master bathroom, because he was never in there. Checked the faucets, nothing. Checked the shower, nothing. Checked the toil… Hold on, I heard this low humming sound like the toilet might have been running. To confirm my suspicion, I turned the water off at the wall. The sound stopped. I decided to leave it off for a day or two to see if the leak reported in the monitoring system's dashboard would stop and it did; we were seeing 0 usage during the hours we would expect to not be using water (i.e. while we were asleep). So I knew at that point it had to be the toilet. I'm no plumber and I haven't stayed at a Holiday Inn Express recently or anything, but as a homeowner, I've had to deal with my fair share of minor plumbing jobs. So my first instinct was to check the flapper inside the tank. Sure enough, it had a small warp on part of it's "lip" that wasn't allowing a proper seal and thus allowing water to escape. Whew! For one, we found the issue pretty quickly. Two, it was something minor that I've dealt with before and only costed about $5-10 bucks to fix. Three, my water bill isn't going to be outrageous due to this minor, but continuous leak that we might have never noticed until it got much worse.</p>
+<p>Ok, ok… Let me get to the point and how this applies to you as an IT professional. A lot of times when we're troubleshooting things, symptoms or events may appear to seem like they are the root cause of the issue, but come to find out, they had nothing to do it. In the example above, because our son arrived around the time the leak was first reported, we immediately attributed the cause to him. As problem solvers, we must try our best to remove our biases towards the first thing that we see, hear, or think of and fully analyze the situation using proper methodologies. Let me give you an example:</p>
+<h3>John Doe says his Internet won't work when connected to Wi-Fi:</h3>
+<p>One day, John Doe reports that “his Internet’s not working” even though he’s connected to Wi-Fi. While troubleshooting John's issue, you notice the client is not receiving an IP address when connecting to the WLAN. The client successfully associates to the WLAN so it must be the DHCP server, right? In fact, John Doe gave you the perfect piece of correlated data when he told you there was a power outage recently and that the server rebooted; he also mentioned that the problem started around that time, but it's only affecting certain clients. It must be related to that power outage… Right? Come to find out, after using the proper troubleshooting steps and ruling out DHCP because you noticed the client was never sending an authentication request via debug logs on the wireless controller and logs on the authentication servers… You realize your friendly server admin put that laptop in a different Active Directory OU that disabled older TLS protocols that were still being used by the client for 802.1X authentication and thus it was not even attempting to authenticate. Without a successfully completed authentication, the client would have never made it to the the 4-Way handshake or the DHCP DORA process to obtain an IP address. The power outage and the DHCP server rebooting were just correlations to the time when the problem started, <strong><em>NOT</em></strong> the causation!</p>
+<p>In the end, when you're troubleshooting, try not to fall into the trap of being stuck on something that might be related to the problem in some way, but isn't actually causing the problem. Sure, it <strong><em>COULD</em></strong> actually be the root cause, but if you've looked into and feel comfortable ruling it out, move on. Don't waste time or energy on something just because it was the first thing that was mentioned or the first thing that you came across.</p>
+    </div><!-- /.entry-content -->
+
+  </article>
+</section>
+        <section id="extras" class="body">
+                <div class="social">
+                        <h2>social</h2>
+                        <ul>
+                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+
+                        </ul>
+                </div><!-- /.social -->
+        </section><!-- /#extras -->
+
+        <footer id="contentinfo" class="body">
+                <address id="about" class="vcard body">
+                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
+                </address><!-- /#about -->
+
+                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
+        </footer><!-- /#contentinfo -->
+
+</body>
+</html>
