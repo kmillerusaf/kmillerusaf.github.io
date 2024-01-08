@@ -48,10 +48,8 @@
   <body>
 <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
     <nav class="uk-navbar uk-margin-large-bottom">
-        <a class="uk-navbar-brand uk-hidden-small" href="/index.html">the packetologist</a>
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
         <ul class="uk-navbar-nav uk-hidden-small">
-    <li><a href="/pages/about-me.html">About me</a></li>
-    <li><a href="/pages/pif-scholarship.html">Pay It Forward Scholarship</a></li>
         </ul>
         <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
         <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
@@ -94,7 +92,7 @@
 <p>Back in 2020, major players like Apple, Google, and Mozilla started to discuss and prepare for capping the UA string in their respective browsers. The reason was two-fold: They wanted to improve privacy for users where clients were passively being fingerprinted based on the UA string and things were starting to break across the web as the UA string continued to grow longer and more complex. Not to mention, minority browsers <a href="https://www.zdnet.com/article/vivaldi-to-change-user-agent-string-to-chrome-due-to-unfair-blocking/">claiming</a> that their browsers are unfairly treated can lie in their UA strings to mimic the client experience of major browsers. But they couldn’t just remove the UA string, because too many servers on the web depended on it. In fact, the plan was to cap it at “11” for macOS devices to support Big Sur, but even that broke compatibility on websites that were expecting to see version 10 so they settled on the last release of Catalina, 10.15.7. Here's an example of how seeing the UA string in a plain-text HTTP packet can change the identification of devices in SmartZone:</p>
 <p>[caption id="attachment_421" align="aligncenter" width="1034"]<img alt="" class="size-full wp-image-421" height="114" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/sz-profile-beforehttp.png" width="1034"> [My MBP is correctly identified correctly as a laptop running macOS Catalina (10.15.7) after visiting the unencrypted website, http://neverssl.com. My iPad Pro running iPadOS 14.8 is identified as a smart phone running iOS before visiting the website since DHCP was the only method used and iOS/iPadOS fingerprints match (1,121,3,6,15,114,119,252)]{style="color: #808080;"}[/caption]<br>
 [caption id="attachment_422" align="aligncenter" width="909"]<img alt="" class="size-full wp-image-422" height="106" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/sz-profile-afterhttp.png" width="909"> [After visiting http://neverssl.com, the iPad's identification changes, but is still incorrectly identified as a laptop running macOS 10.15.6 due to the UA string sent by Safari (desktop versions of websites are requested by default)]{style="color: #808080;"}[/caption]<br>
-[caption id="attachment_457" align="aligncenter" width="993"]<img alt="" class="size-full wp-image-457" height="99" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/sz-profile-mobilewebsite.png" width="993"> [By disabling "Request Desktop Website" in Settings -> Safari, the iPad is now correctly identified as a Tablet with the correct version of iPadOS (iOS) after visiting http://neverssl.com]{style="color: #808080;"}[/caption]</p>
+[caption id="attachment_457" align="aligncenter" width="993"]<img alt="" class="size-full wp-image-457" height="99" src="https://www.thepacketologist.com/wp-content/uploads/2021/10/sz-profile-mobilewebsite.png" width="993"> [By disabling "Request Desktop Website" in Settings -&gt; Safari, the iPad is now correctly identified as a Tablet with the correct version of iPadOS (iOS) after visiting http://neverssl.com]{style="color: #808080;"}[/caption]</p>
 <p>So is client fingerprinting dead? With DHCP being somewhat unreliable and HTTP effectively rendered useless, it seems so, right? For me, the right answer is it depends. The <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> introduced a plan to still allow for fingerprinting, but in a manner that is active vs passive and a bit more secure using something called <a href="https://wicg.github.io/ua-client-hints/">User-Agent Client Hints</a> (UA-CH). This allows a client to initially only send a subset of the information found in the typical UA string but allows the server to request for more information as needed. Sounds great. The problem is, this only works over TLS, meaning the HTTP headers that are sent back and forth between the client and server will be encrypted and unable to be seen unless a device is acting as a proxy server for the client's connection. This is unlikely to happen with wireless controllers or APs so while this appears to fix their problem, it doesn't fix ours. So where do we go from here? Do we go back to just relying on MAC OUI and DHCP as a best effort way of identifying devices and ignore the UA string? Should we even be using device type as a means of providing specialized network access or policy? Probably not, because it wasn't foolproof even with HTTP in the mix as I illustrated above. I found this problem rather interesting, but I haven't seen much mentioned about this within the Wi-Fi community so I'm genuinely curious what everyone's thoughts are about this. Is it just a big "I don't care." or is there more to this? Reach out on <a href="https://twitter.com/packetologist">Twitter</a> to start a conversation!</p>
 <p>Ps. Special thanks to <a href="https://twitter.com/DarrellDeRosia">Darrell DeRosia</a>, <a href="https://twitter.com/UKDanJones">Dan Jones</a>, and <a href="https://twitter.com/WirelessJimP">Jim Palmer</a></p>
 <p>Sources: <a href="https://groups.google.com/a/chromium.org/g/blink-dev/c/-2JIRNMWJ7s/m/yHe4tQNLCgAJ?pli=1">Google discussion about capping the UA string</a> , <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1679929">Mozilla discussion</a> , <a href="https://bugs.webkit.org/show_bug.cgi?id=216593">Safari discussion</a> , <a href="https://web.dev/user-agent-client-hints/">Improving user privacy and developer experience with User-Agent Client Hints</a> , <a href="https://wicg.github.io/client-hints-infrastructure/">Client Hints Infrastructure</a></p>
@@ -122,11 +120,14 @@
     <div class="uk-panel">
     <h3 class="uk-panel-title">Tags</h3>
     <ul class="uk-list uk-list-line">
-          <li><a href="/tag/python.html" class="uk-icon-tag">python</a></li>
+          <li><a href="/tag/troubleshooting.html" class="uk-icon-tag">troubleshooting</a></li>
           <li><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
-          <li><a href="/tag/lldp.html" class="uk-icon-tag">lldp</a></li>
-          <li><a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a></li>
-          <li><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li><a href="/tag/android.html" class="uk-icon-tag">android</a></li>
+          <li><a href="/tag/mist.html" class="uk-icon-tag">mist</a></li>
+          <li><a href="/tag/python.html" class="uk-icon-tag">python</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/lldp.html" class="uk-icon-tag">lldp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
           <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
               </ul>
               <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
@@ -140,7 +141,6 @@
           <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
           <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
           <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
-          <li><a href="#" class="uk-icon-external-link">You can modify those links in your config file</a></li>
     </ul>
     </div>
 
@@ -160,8 +160,6 @@
 <div id="offcanvas" class="uk-offcanvas">
     <div class="uk-offcanvas-bar">
         <ul class="uk-nav uk-nav-offcanvas">
-    <li><a href="/pages/about-me.html">About me</a></li>
-    <li><a href="/pages/pif-scholarship.html">Pay It Forward Scholarship</a></li>
         </ul>
     </div>
 </div>

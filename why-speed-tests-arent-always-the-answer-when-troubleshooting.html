@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <base href="">
+
+    <!--
+    favicons generated with:
+    <http://realfavicongenerator.net>
+
+    if you want to generate your own favicon, use this custom path:
+    /theme/ico/favicon/
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/ico/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/ico/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/ico/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/ico/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/ico/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/ico/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/ico/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/ico/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/theme/ico/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/theme/ico/favicon/manifest.json">
+    <link rel="mask-icon" href="/theme/ico/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/theme/ico/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/theme/ico/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/ico/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    <script src="/theme/js/lib/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="/theme/css/uikit.min.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/custom.min.css" />
+    <!-- default pygment style is the 'default' style -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
+    <script src="/theme/js/uikit.min.js"></script>
+    <title>Why speed tests aren't always the answer when troubleshooting wi-fi networks | the packetologist</title>
+   <meta name="tags" content="troubleshooting, wi-fi" />  <meta name="description" content="Table of Contents Background In my current role, we sometimes receive complaints about the Wi-Fi being slow or not working properly. When we ask what the..." />  <meta name="category" content="TCP/IP, Troubleshooting, Wi-Fi" /> 
+  </head>
+  <body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <nav class="uk-navbar uk-margin-large-bottom">
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+        </ul>
+        <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
+        <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
+    </nav>
+    <div class="uk-grid" data-uk-grid-margin="">
+        <main class="uk-width-medium-3-4">
+<article>
+<div class="uk-article">
+    <header>
+    <h1 class=" uk-article-title">
+        <a href="/why-speed-tests-arent-always-the-answer-when-troubleshooting.html">Why speed tests aren't always the answer when troubleshooting Wi-Fi networks</a>
+    </h1>
+    <p class="uk-article-meta">
+    Published on   <time datetime="2023-12-29">Fri 29 December 2023</time>
+        by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
+    posted in <a href="/category/tcpip-troubleshooting-wi-fi.html">TCP/IP, Troubleshooting, Wi-Fi</a>
+    <br/>
+    <a href="/tag/troubleshooting.html" class="uk-icon-tag">troubleshooting</a>
+    <a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a>
+
+    </p>
+    </header>
+    <p>Table of Contents</p>
+<h2>Background</h2>
+<p>In my current role, we sometimes receive complaints about the Wi-Fi being slow or not working properly. When we ask what the issue is, we're often sent responses referring to speed test results only that are supposed to serve as the definitive proof that something's wrong with the Wi-Fi. What our user base often doesn't understand is that there are many variables when it comes to speed tests in general, but when running these speed tests while connected to Wi-Fi, even more variables exist. Let me try to explain.</p>
+<p>Whether it be wired or Wi-Fi, there are theoretical and real-world throughput maximums in networking that are affected by a number of things. For example, even when you have a 1 Gbps wired connection, chances are you'll never get full 1 Gbps line-rate speeds in a raw throughput test due to at minimum, the overhead needed to put bits onto the wire, not to mention whether the latency and TCP Window Size (if using TCP) can support the line-rate speed. Latency and the TCP Window Size are two things I'll come back to in more detail later.</p>
+<h2>Wi-Fi considerations</h2>
+<p>With Wi-Fi, your theoretical max speed is governed by several variables and usually the biggest limitations fall on the client side and not the infrastructure (AP). A few of those variables that I'm referring to include the number of antennas and number of spatial streams (SS) supported, the bandwidth of the Wi-Fi channel being used, and the guard interval (GI). I'll take the GI out of the equation as we typically configure the infrastructure to support the lowest possible value and it only accounts for an approximate 10-11% increase when using the long GI of 0.8µs vs the short GI of 0.4µs. The GI has the lowest effect on the theoretical max out of the variables I just mentioned with the number of supported SS and channel bandwidth being the two biggest factors. For a number of reasons including battery savings and cost, most client devices (including the newer Apple Silicon MacBooks) only support 1 or 2 spatial streams. When it comes to channel bandwidth in enterprise environments where APs are deployed in large numbers, we typically use 20 MHz channels as the recommended best practice to prevent interference due to neighboring APs and clients potentially communicating on the same channel. At home, it's much easier to increase the channel bandwidth up to 40 or even 80 MHz where only a single or few APs exist which would effectively double the maximum theoretical data rate.</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/MCSIndex-table-1.png"></p>
+<p>Fig. 1 MCS data rates and index table courtesy of https://www.mcsindex.com</p>
+<p>As you can see in the above screenshot (Fig. 1), the maximum theoretical data rate on a 2SS, Wi-Fi 5 (802.11ac) device using a 20 MHz channel is 173.3 Mbps; compared to a 1SS Wi-Fi 5 device with a max data rate of 86.7 Mbps, that's a 2X increase just by supporting one additional spatial stream. That number bumps up to 286 Mbps if Wi-Fi 6 (802.11ax) is in use by both the client and infrastructure which should be the case in most enterprise networks at the time this blog post is published. Now look at what happens when you increase the channel bandwidth - it more than doubles each time you move up going from 173.3 Mbps to 400 Mbps to 866.7 Mbps for 20, 40, and 80 MHz bandwidths respectively when referring to that same 2SS, Wi-Fi 5 device.</p>
+<p><strong>At this time, I think it's important to note that Wi-Fi data rates do NOT equal actual throughput</strong>. That's a common mistake that is made and I just wanted to call it out. Additionally, that max data rate is a best-case scenario which depends on a number of things including having a clean channel with strong signal quality that way the transmitter which is in charge of choosing the data rate used for each frame sent will choose a higher data rate. Not to mention, there is still overhead involved with using Wi-Fi so even if you had 95% of that maximum (173.3 Mbps) which would be considered extremely high and probably unheard of in a busy enterprise WLAN, you would expect at most 165 Mbps of real-world throughput. As you begin to add more clients to the WLAN, the overall throughput goes down due to the overhead of management traffic, checking and clearing the channel, collisions, etc since only 1 device can speak at a time in Wi-Fi, including the AP itself. Is it starting to become more clear? Even in perfect conditions, your maximum throughput on most client devices (assuming Wi-Fi 6 is supported) in a typical enterprise office is going to be roughly 272 Mbps with just Wi-Fi in mind.</p>
+<h2>The effects of latency and TCP Window Size</h2>
+<p>I could stop here. I think it's safe to say that in most enterprise environments, the limited number of spatial streams and the 20 MHz channel widths are going to be the most common caps for your max throughput. However, I still want to circle back around to latency and TCP window size because they can both play a part, especially when you start to think about remote office locations that have to traverse a WAN to tunnel traffic back to a distant, centralized location which will add latency into the mix… And unless you're using something like iPerf to do throughput testing which does allow testing using UDP (TCP is the default) and will typically result in faster speeds due to its connectionless behavior, most of these application or web-based speed tests are using TCP. And if you weren't already aware, the maximum throughput that a device can expect to see using TCP as the transport protocol can be easily determined with a formula:</p>
+<p><strong><em>TCP Throughput (bits/second) =</em></strong> <strong><em>TCP Window Size (in bits) / Latency (in seconds)</em></strong></p>
+<p>The further you are away from a destination, the more latency you incur. It is common to assume 1ms of latency for every 60 miles to the destination. This doesn't factor in the type of connection you are using (e.g. cable, DSL) which also adds latency to the equation (see below).</p>
+<ul>
+<li>Cable modem: 5-40ms</li>
+<li>DSL modem: 10-70ms</li>
+<li>Dial-up modem: 100-220ms</li>
+<li>Cellular: 200-600ms</li>
+<li>T1: 0-10ms</li>
+</ul>
+<p><em>The above numbers courtesy of <a href="https://www.pingplotter.com/wisdom/article/is-my-connection-good/" target="_blank" rel="noreferrer noopener">https://www.pingplotter.com/wisdom/article/is-my-connection-good/</a></em></p>
+<p>Then you'll need to factor in the TCP Window Size. For the download portion of a speed test, the client's window size is the number to focus on. Every operating system's defaults are different and it also depends on the capabilities of the NIC and machine itself. Oh, and don't forget about <a href="https://www.keycdn.com/support/tcp-slow-start" target="_blank" rel="noreferrer noopener">TCP Slow Start</a> which can cause the numbers to be skewed during a short test as the window size is increased over time. So let's take a look at some examples from my 2023 M2 MacBook Air that has 2SS and supports Wi-Fi 6 when connected to a 20 MHz channel:  </p>
+<p><em>Note - While performing these tests, I had Wireshark running to capture the traffic so I could analyze the TCP window size, latency, and perceived throughput as these web-based tests are known for not reporting the most accurate speeds.</em></p>
+<h2>Topology and benchmark tests</h2>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-19.png"></p>
+<p>Fig 2. Simplified topology of network used for testing</p>
+<p>The first test shows the client performing a speed test against the OpenSpeedTest server running on the WLANPi. The AP and the WLANPi were both connected to the same L2 switch at 1 Gbps so the absolute max throughput you could get would be 1 Gbps. Based on what we know already, our throughput will be much lower due to testing over Wi-Fi and the configuration of the WLAN, probably 25% or less of that number. By using Adrian's <a href="https://www.intuitibits.com/products/wifisignal/" target="_blank" rel="noreferrer noopener">WiFi Signal</a> app, I was able to verify that my MacBook had both great RSSI and SNR, and was using the max data rate of 286.8 Mbps while performing this test; the same appeared to be the case for the AP as verified from the Mist UI, but it's hard to get accurate numbers due to the delay of client data populating. The latency was extremely low since again, the AP and the WLANPi are connected to the same L2 switch (Fig. 2). Understanding that 286 Mbps is the bottleneck, we saw about 85% (247 Mbps) of the 286.8 Mbps with these 2 devices being the only 2 on the channel (see Fig. 4 from Adrian's <a href="https://www.intuitibits.com/products/wifiexplorerpro3/" data-type="link" data-id="https://www.intuitibits.com/products/wifiexplorerpro3/" target="_blank" rel="noreferrer noopener">WiFi Explorer Pro 3</a>). I'd say 85% is very good!</p>
+<p>![]https://www.thepacketologist.com/wp-content/uploads/2023/12/image-4-1024x718.png)</p>
+<p>Fig 3. OpenSpeedTest on a clean channel with just the AP and client</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-5-1024x204.png"></p>
+<p>Fig. 4 MacBook Air connected to the test WLAN "Mist-5GHz-Only" using 20 MHz channel BW and 2SS.<br />
+No other APs are broadcasting on channel 112 and no other clients were connected.</p>
+<p>Just to set the stage a bit, what would have been the max TCP throughput of the download test in a perfect world if we just looked at latency and the window size. I took the average window size reported by my MacBook Air along with the latency of 2ms to use in the formula and came up with this:</p>
+<p><strong>3.32 Gbps</strong> (3320000000 bits/second) = 6640000 bits / 0.002 seconds</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-20-1024x593.png"></p>
+<p>Fig. 5 I/O graph of Wireshark filtered on TCP/3000 which is used by OpenSpeedTest</p>
+<p>With 3.32 Gbps being the max TCP throughput, our wired connections to the AP and WLANPi would have become the bottleneck. We'd need <a href="https://www.arubanetworks.com/faq/what-is-multi-gigabit-ethernet/" target="_blank" rel="noreferrer noopener">multi-gig</a> (802.3bz) to take advantage of those speeds.</p>
+<p>That's great, but most speed test servers aren't going to be 2ms away, even at home... Best case, you'll probably see 20-40ms of latency based on the factors I mentioned above. How can we test this though? Great question! <a href="https://man7.org/linux/man-pages/man8/tc.8.html">tc or traffic</a> <a href="https://man7.org/linux/man-pages/man8/tc.8.html" target="_blank" rel="noreferrer noopener"></a> <a href="https://man7.org/linux/man-pages/man8/tc.8.html">control</a> is a Linux utility that allows you manipulate the kernel packet scheduler. You can do things like add artificial latency or even bandwidth limitations to simulate distance or lower speed WAN links. Even better, I found a wrapper online called <a href="https://tcconfig.readthedocs.io/en/latest/index.html" target="_blank" rel="noreferrer noopener">tcconfig</a> that makes configuring tc (Fig. 6) even easier.</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-23-1024x145.png"></p>
+<p>Fig. 6 tcconfig even allows you to add latency to a Docker container instead of the host</p>
+<p>What happens if I add 35ms of latency? What does the formula say about that when using that same 830K window size?</p>
+<p><strong>189 Mbps</strong> (189714285 bits/second) = 6640000 bits / 0.035 seconds --- See how that number starts to drastically change just by adding latency? And here's the OpenSpeedTest result below (Fig. 7) . Important to remember, I used a rough average of the window size, not the max, so the numbers will be off slightly.</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-21-1024x699.png"></p>
+<p>Fig 7. OpenSpeedTest results with 35ms of artificial latency added</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-33.png"></p>
+<p>Fig. 8 iPerf using UDP with 35ms of artificial latency added is higher than the TCP-based OpenSpeedTest</p>
+<p>What happens with 70ms of latency?</p>
+<p><strong>95 Mbps</strong> (94857142 bits/second) = 6640000 bits / 0.070 seconds --- That number falls by about half! And when you're talking about WAN links that traverse half the country or more, 70ms is not an absurd number to expect. See the speed test results below (Fig. 9)</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-24-1024x700.png"></p>
+<p>Fig. 9 OpenSpeedTest results with 70ms of artificial latency added</p>
+<p>"But why is the download speed lower than the upload speed?" Have you ever gotten this question before? There could be multiple reasons for this such as better SNR on the AP side resulting in higher data rates being used. Assuming the downlink and uplink of the Wi-Fi connection were balanced, if you remember from the first Wireshark I/O graph (Fig. 5), the server's average TCP window size (the blue line) during the upload portion (MacBook sending data to the WLANPi) was significantly higher than my MacBook Air's to the tune of 3,140,000 bytes which is almost 4X larger than the 830,000 bytes. Using the TCP throughput formula with that same 70ms of latency, that would give you a TCP throughput max of 359 Mbps which is of course higher than the 286 Mbps limit that the Wi-Fi connection can actually provide. And as you can see, the upload throughput was still quite a bit lower so there were probably even more factors that I was not able to discover involved.</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-32.png"></p>
+<p>Fig. 10 iPerf throughput using UDP with 70ms of artificial latency added is higher than the TCP-based OpenSpeedTest</p>
+<p>What if we simulate a slower WAN link? It's almost 2024 and yes, I'm still running into DIA (dedicated Internet access) and WAN links of 100 Mbps. With the WAN link being the bottleneck, it doesn't matter how many spatial streams you have or what channel bandwidths you are using, you're going to be limited to that 100 Mbps and you can see that in the download speed results below (Fig. 11):</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-27-1024x696.png"></p>
+<p>Fig. 11 Even though the latency is back to 2ms and the window sizes are unchanged, the download speed was limited to the 100Mbps we configured using the tc utility.</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-30.png"></p>
+<p>Fig 12. As a note, I did have to set tcconfig to rate limit the "incoming" direction as well since "outgoing" is the default.</p>
+<p>And don't forget to remove any configurations you might have made using tc or tcconfig (Fig. 13)!</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-35.png"></p>
+<p>Fig. 13 Example of removing configurations set against the Docker container's virtual Ethernet NIC</p>
+<h2>Conclusion</h2>
+<p>As you can see, there are a variety of factors involved in determining what results a speed test will have, especially when you add Wi-Fi into consideration. Without proper context and more information, it's hard to take those results at face value because there are so many variables with just several of them listed below:</p>
+<ul>
+<li>What were the conditions of the RF environment at the time of the test?</li>
+<li>How is the WLAN configured?</li>
+<li>How many Wi-Fi clients were connected and active?</li>
+<li>What data rates were in use, both at the client and AP?</li>
+<li>What was the RTT (round-trip time) to that speed test server?</li>
+<li>What TCP window sizes were used if the speed test was using TCP?</li>
+<li>If traversing a WAN link, what is the link's speed?</li>
+</ul>
+<p>Instead of chasing speed test results, focus on asking the customer more specific questions about the problems or issues that they are experiencing which prompted them to run the speed test to begin with. Gather as much information as possible and use whatever tools you have at your disposal to get to the bottom of what's being reported and when possible, educate your customer, especially on why speed tests aren't always the answer!</p>
+<p>As always, let me know what you think and feel free to join in on the discussion.</p>
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
+
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/me.jpeg"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is Keith, check out more <a href="authors.html">about me</a>.
+      </p>
+  </div>
+
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="https://twitter.com/packetologist" class="uk-icon-button uk-icon-justify uk-icon-twitter"></a>
+          <a href="https://www.linkedin.com/in/keith-miller-b761073a/" class="uk-icon-button uk-icon-justify uk-icon-linkedin"></a>
+      </div>
+  </div>
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/troubleshooting.html" class="uk-icon-tag">troubleshooting</a></li>
+          <li><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+          <li><a href="/tag/android.html" class="uk-icon-tag">android</a></li>
+          <li><a href="/tag/mist.html" class="uk-icon-tag">mist</a></li>
+          <li><a href="/tag/python.html" class="uk-icon-tag">python</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/lldp.html" class="uk-icon-tag">lldp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
+
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+        </ul>
+    </div>
+</div>
+  </body>
+</html>

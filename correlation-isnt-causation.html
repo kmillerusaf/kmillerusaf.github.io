@@ -42,66 +42,110 @@
     <!-- default pygment style is the 'default' style -->
     <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
     <script src="/theme/js/uikit.min.js"></script>
-    <title>Correlation != Causation | the packetologist</title>
-   <meta name="description" content="This morning, I tweeted the message below without much context: With the 280 character limit of Twitter (hard to believe it used to be 140),..." />
+    <title>Correlation != causation | the packetologist</title>
+   <meta name="tags" content="troubleshooting, wi-fi" />  <meta name="description" content="This morning, I tweeted the message below without much context: With the 280 character limit of Twitter (hard to believe it used to be 140), sometimes it&#39;s..." />  <meta name="category" content="Troubleshooting" /> 
   </head>
   <body>
 <div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
     <nav class="uk-navbar uk-margin-large-bottom">
-        <a class="uk-navbar-brand uk-hidden-small" href="/index.html">the packetologist</a>
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
         <ul class="uk-navbar-nav uk-hidden-small">
-    <li><a href="/pages/about-me.html">About me</a></li>
-    <li><a href="/pages/pif-scholarship.html">Pay It Forward Scholarship</a></li>
         </ul>
         <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
         <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
     </nav>
     <div class="uk-grid" data-uk-grid-margin="">
         <main class="uk-width-medium-3-4">
-  <article>
+<article>
 <div class="uk-article">
     <header>
     <h1 class=" uk-article-title">
-        <a href="/causation-isnt-causation.html">Correlation != Causation</a>
+        <a href="/correlation-isnt-causation.html">Correlation != Causation</a>
     </h1>
     <p class="uk-article-meta">
-    Published on   <time datetime="2021-10-06">Tue 27 September 2022</time>
+    Published on   <time datetime="2022-09-27">Tue 27 September 2022</time>
         by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
-    posted in <a href="/category/troubleshooting-wi-fi.html">Troubleshooting, Wi-Fi</a>
+    posted in <a href="/category/troubleshooting.html">Troubleshooting</a>
     <br/>
+    <a href="/tag/troubleshooting.html" class="uk-icon-tag">troubleshooting</a>
     <a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a>
 
     </p>
     </header>
-</footer><!-- /.post-info -->      <p>This morning, I tweeted the message below without much context:</p>
-<p><img alt="" src="/Users/mills/py-projects/thepacketologist/content/images/tweet.png"></p>
+    <p>This morning, I tweeted the message below without much context:</p>
+<p><img alt="" src="/images/tweet.png"></p>
 <p>With the 280 character limit of Twitter (hard to believe it used to be 140), sometimes it's difficult to fully express an idea or the context behind it and instead of trying to create a messy, multi-threaded tweet, I just left it there as food for thought. But here on my blog, I can elaborate further on why this situation stood out to me and how it applies to you, the reader, who's most likely in an IT related role.</p>
 <p>So going back to what happened, I want to be clear that the "leak" was very small, almost imperceptible. However, it was large enough to be picked up by the water company’s monitoring system and it was within minutes to maybe an hour from when our son arrived at our house. It wasn't until 2-3 days later that my wife and I received the e-mail with the alert and we both immediately thought that it had to be related to our son’s visit over the weekend. We checked every faucet, toilet, and showerhead that he might have used and we didn't notice anything out of place or any build-up of moisture in the sinks or tubs. For good measure, we even checked the water spigots outside since one of them is exposed to the public and we know how kids can be sometimes… Nothing. Then it hit me… The only place we hadn't checked was our own master bathroom, because he was never in there. Checked the faucets, nothing. Checked the shower, nothing. Checked the toil… Hold on, I heard this low humming sound like the toilet might have been running. To confirm my suspicion, I turned the water off at the wall. The sound stopped. I decided to leave it off for a day or two to see if the leak reported in the monitoring system's dashboard would stop and it did; we were seeing 0 usage during the hours we would expect to not be using water (i.e. while we were asleep). So I knew at that point it had to be the toilet. I'm no plumber and I haven't stayed at a Holiday Inn Express recently or anything, but as a homeowner, I've had to deal with my fair share of minor plumbing jobs. So my first instinct was to check the flapper inside the tank. Sure enough, it had a small warp on part of it's "lip" that wasn't allowing a proper seal and thus allowing water to escape. Whew! For one, we found the issue pretty quickly. Two, it was something minor that I've dealt with before and only costed about $5-10 bucks to fix. Three, my water bill isn't going to be outrageous due to this minor, but continuous leak that we might have never noticed until it got much worse.</p>
 <p>Ok, ok… Let me get to the point and how this applies to you as an IT professional. A lot of times when we're troubleshooting things, symptoms or events may appear to seem like they are the root cause of the issue, but come to find out, they had nothing to do it. In the example above, because our son arrived around the time the leak was first reported, we immediately attributed the cause to him. As problem solvers, we must try our best to remove our biases towards the first thing that we see, hear, or think of and fully analyze the situation using proper methodologies. Let me give you an example:</p>
 <h3>John Doe says his Internet won't work when connected to Wi-Fi:</h3>
 <p>One day, John Doe reports that “his Internet’s not working” even though he’s connected to Wi-Fi. While troubleshooting John's issue, you notice the client is not receiving an IP address when connecting to the WLAN. The client successfully associates to the WLAN so it must be the DHCP server, right? In fact, John Doe gave you the perfect piece of correlated data when he told you there was a power outage recently and that the server rebooted; he also mentioned that the problem started around that time, but it's only affecting certain clients. It must be related to that power outage… Right? Come to find out, after using the proper troubleshooting steps and ruling out DHCP because you noticed the client was never sending an authentication request via debug logs on the wireless controller and logs on the authentication servers… You realize your friendly server admin put that laptop in a different Active Directory OU that disabled older TLS protocols that were still being used by the client for 802.1X authentication and thus it was not even attempting to authenticate. Without a successfully completed authentication, the client would have never made it to the the 4-Way handshake or the DHCP DORA process to obtain an IP address. The power outage and the DHCP server rebooting were just correlations to the time when the problem started, <strong><em>NOT</em></strong> the causation!</p>
 <p>In the end, when you're troubleshooting, try not to fall into the trap of being stuck on something that might be related to the problem in some way, but isn't actually causing the problem. Sure, it <strong><em>COULD</em></strong> actually be the root cause, but if you've looked into and feel comfortable ruling it out, move on. Don't waste time or energy on something just because it was the first thing that was mentioned or the first thing that you came across.</p>
-    </div><!-- /.entry-content -->
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
 
-  </article>
-</section>
-        <section id="extras" class="body">
-                <div class="social">
-                        <h2>social</h2>
-                        <ul>
-                            <li><a href="/feeds/all.atom.xml" type="application/atom+xml" rel="alternate">atom feed</a></li>
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/me.jpeg"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is Keith, check out more <a href="authors.html">about me</a>.
+      </p>
+  </div>
 
-                        </ul>
-                </div><!-- /.social -->
-        </section><!-- /#extras -->
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="https://twitter.com/packetologist" class="uk-icon-button uk-icon-justify uk-icon-twitter"></a>
+          <a href="https://www.linkedin.com/in/keith-miller-b761073a/" class="uk-icon-button uk-icon-justify uk-icon-linkedin"></a>
+      </div>
+  </div>
 
-        <footer id="contentinfo" class="body">
-                <address id="about" class="vcard body">
-                Proudly powered by <a href="https://getpelican.com/">Pelican</a>, which takes great advantage of <a href="https://www.python.org/">Python</a>.
-                </address><!-- /#about -->
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/troubleshooting.html" class="uk-icon-tag">troubleshooting</a></li>
+          <li><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+          <li><a href="/tag/android.html" class="uk-icon-tag">android</a></li>
+          <li><a href="/tag/mist.html" class="uk-icon-tag">mist</a></li>
+          <li><a href="/tag/python.html" class="uk-icon-tag">python</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/lldp.html" class="uk-icon-tag">lldp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
 
-                <p>The theme is by <a href="https://www.smashingmagazine.com/2009/08/designing-a-html-5-layout-from-scratch/">Smashing Magazine</a>, thanks!</p>
-        </footer><!-- /#contentinfo -->
 
-</body>
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+        </ul>
+    </div>
+</div>
+  </body>
 </html>

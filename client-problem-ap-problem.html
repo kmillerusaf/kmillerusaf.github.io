@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <base href="">
+
+    <!--
+    favicons generated with:
+    <http://realfavicongenerator.net>
+
+    if you want to generate your own favicon, use this custom path:
+    /theme/ico/favicon/
+    -->
+    <link rel="apple-touch-icon" sizes="57x57" href="/theme/ico/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/theme/ico/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/theme/ico/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/theme/ico/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/theme/ico/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/theme/ico/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/theme/ico/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/theme/ico/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/theme/ico/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="/theme/ico/favicon/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="/theme/ico/favicon/manifest.json">
+    <link rel="mask-icon" href="/theme/ico/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/theme/ico/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="/theme/ico/favicon/mstile-144x144.png">
+    <meta name="msapplication-config" content="/theme/ico/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    
+    <script src="/theme/js/lib/jquery-1.11.3.js"></script>
+    <link rel="stylesheet" type="text/css" href="/theme/css/uikit.min.css" />
+    <!-- custom css -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/custom.min.css" />
+    <!-- default pygment style is the 'default' style -->
+    <link rel="stylesheet" type="text/css" href="/theme/css/pygment.min.css" />
+    <script src="/theme/js/uikit.min.js"></script>
+    <title>When is a client problem also an ap problem? | the packetologist</title>
+   <meta name="tags" content="android, mist, troubleshooting, wi-fi" />  <meta name="description" content="My employer is currently building a new home office (HO) campus. In every building except two infrastructure support buildings, we are installing Mist..." />  <meta name="category" content="Troubleshooting, Wi-Fi" /> 
+  </head>
+  <body>
+<div class="uk-container uk-container-center uk-margin-top uk-margin-large-bottom">
+    <nav class="uk-navbar uk-margin-large-bottom">
+        <a class="uk-navbar-brand uk-hidden-small" href="">the packetologist</a>
+        <ul class="uk-navbar-nav uk-hidden-small">
+        </ul>
+        <a href="#offcanvas" class="uk-navbar-toggle uk-visible-small" data-uk-offcanvas=""></a>
+        <div class="uk-navbar-brand uk-navbar-center uk-visible-small">the packetologist</div>
+    </nav>
+    <div class="uk-grid" data-uk-grid-margin="">
+        <main class="uk-width-medium-3-4">
+<article>
+<div class="uk-article">
+    <header>
+    <h1 class=" uk-article-title">
+        <a href="/client-problem-ap-problem.html">When is a client problem also an AP problem?</a>
+    </h1>
+    <p class="uk-article-meta">
+    Published on   <time datetime="2023-12-13">Wed 13 December 2023</time>
+        by         <a class="url fn" href="/author/kmiller.html">kmiller</a>
+    posted in <a href="/category/troubleshooting-wi-fi.html">Troubleshooting, Wi-Fi</a>
+    <br/>
+    <a href="/tag/android.html" class="uk-icon-tag">android</a>
+    <a href="/tag/mist.html" class="uk-icon-tag">mist</a>
+    <a href="/tag/troubleshooting.html" class="uk-icon-tag">troubleshooting</a>
+    <a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a>
+
+    </p>
+    </header>
+    <p>My employer is currently building a new home office (HO) campus. In every building except two infrastructure support buildings, we are installing Mist AP45s which are 6E capable. The two support buildings received AP43s which don’t support 6E, but are Wi-Fi 6 (802.11ax) capable and still very capable APs.</p>
+<p>Why is that important? Well, as most if not all of you out there know by now, WPA3 is mandatory in 6 GHz. We haven’t deployed the AP45s in many places yet, so the new HO campus is an opportunity to really get our hands dirty with not just 6 GHz, but also WPA3-Enterprise on our corp WLAN and OWE on our guest WLAN to see how some of our client base would respond and operate. But Keith, didn’t you just say the support buildings had AP43s which don’t support 6 GHz operation? I did, but as I mentioned in the opening paragraph, they are 802.11ax capable and 802.11ax does support WPA3 which isn’t something we had broadly enabled yet in our environments up to this point!</p>
+<p>Long story short, we enabled WPA3 Enterprise and OWE on our WLANs in three buildings. One building has AP45s installed and the other two buildings have the AP43s. For a week or so, there weren’t any reports of issues until one day, someone reached out stating they couldn’t connect to the OWE enabled guest WLAN in one of the two support buildings while using their Samsung Galaxy S21 running Android 13. After looking at the Mist dashboard and downloading some of the dynamic packet captures that were taken during the client’s connection failures, I reached out to the Wi-Fi Pros community to see if anyone had seen or heard of any issues like what I saw in the screenshots below (Figures 1, 2, and 3). Bryan Ward mentioned that he saw some references in Mist’s release notes, so with that knowledge, I decided to upgrade the firmware from 0.10 to the "recommended to us" version of 0.12.27147. This immediately fixed her issue and I went on my way. Thanks again Bryan if you’re reading this!</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/AssocRequest-1.png"></p>
+<p>Figure 1. Notice the SSID in the association request. I didn't catch this during the first report of problems</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/AssocRequest-Details.png"></p>
+<p>Figure 2. SSID in the association request has a tag length of 15, but shows as 30 "0"s</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/AssocResponse-OutOfScope.png"></p>
+<p>Figure 3. Association denied by the AP with reason "outside the scope of this standard"</p>
+<p>Fast forward just a few days later and I received another report of several Android devices, both Google Pixel and Samsung Galaxy phones all running Android 14 having issues connecting to the same OWE enabled guest WLAN. This time, the reports were for both AP43 buildings. After speaking to them and doing some initial troubleshooting, there were a few things of interest that I will break out into a bulleted list below:</p>
+<ul>
+<li>During the connection failures, I did not find any client events for the phones in the Mist dashboard. It was as if the phone never tried to connect (keep this in mind for later)</li>
+<li>A screenshot (Figure 4) from one of their phones showed “Connection failed” underneath the network after the phone failed to "join"</li>
+<li>Packet captures from the Mist APs while the phones attempted to connect only showed probe requests from them without any probe responses from the nearby APs. The part that was even stranger to me was that the phone was probing for a SSID value of 000000000000000000000000000000 and with a tag length value of 15 bytes (Figures 5 and 6) – <em>This was also evident in the association request from the initial report of problems, but I didn't notice it until after everything was fixed.</em></li>
+</ul>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/image-1-477x1024.png"></p>
+<p>Figure 4. "Connection failed" message under the WLAN on a Samsung Galaxy</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/ClientProbing-NoResponses.png"></p>
+<p>Figure 5. Many probe requests with a SSID value of 30 0s or 15 bytes of 0 - Notice there aren't any quotes around it which is usually what you'd see in Wireshark for a directed probe request</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/ClientProbing-Details.png"></p>
+<p>Figure 6. Details of probe request with 30 0s and tag length of 15 bytes</p>
+<p>After a brief discussion on the WLAN Pros Slack (thanks Karsten and Stefan!), I came to understand that this value of 30 0s was actually the UTF-8 representation of a bunch of 0 bytes (15 to be exact). The 802.11 standard (Figure 7) talks about the SSID potentially being represented in the UTF-8 format, however, the UTF-8 SSID bit would need to be set in the Extended Capabilities IE which it was not. So based on what we know, the SSID value should be interpreted as ASCII and likely as 30 consecutive "0"s.</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/80211-SSID.png"></p>
+<p>Figure 7. 802.11-2020 standard talks about the SSID field being 0-32 octets (or bytes) and what happens if the UTF-8 subfield is set to 1</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/ProbeRequest-UTF8.png"></p>
+<p>Figure 8. UTF-8 SSID bit with a value of 0 which should mean the SSID is interpreted as ASCII</p>
+<p>My head hurts at this point... So what does this all mean? I'm still trying to understand exactly why the client behaved the way it did, but it turns out that the problem was likely attributed to a failure loop that was initially caused by the Mist AP. I could be wrong, but here's what I'm thinking...  </p>
+<p>You see, what I initially missed is that the APs had ALSO been beaconing (Figure 9) with the SSID value of 000000000000000000000000000000 and the UTF-8 SSID bit set to 0 on the previous firmware version. Based on what the standard says and if our interpretation of the standard is true, my opinion is that the Android clients interpreted the SSID in the beacon frame as "000000000000000000000000000000" and decided to therefore directly probe for it. And because the UTF-8 SSID bit was also set to 0 in the probe request from the client, the APs also interpreted the SSID as an ASCII string of "000000000000000000000000000000" that they didn't have available or configured so in turn ignored the clients' probes. This resulted in the clients never attempting to associate to the network (different from the initial problem reported when the S21 actually did try to associate) which is why there weren't any client events for these failures in the Mist dashboard! I guess my only remaining question would be what is different in the Android OS vs iOS that the Android devices couldn't handle this scenario, but iPhones could. Unfortunately, there's not enough time to dig into that, but definitely something that remains on my mind.</p>
+<p><img alt="" src="https://www.thepacketologist.com/wp-content/uploads/2023/12/Beacons-BeforeAfterUpgrade-1-1024x112.png"></p>
+<p>Figure 9. Single AP (8d:33:51) was upgraded and notice that the SSID value in the beacon frames is now showing as "Wildcard" as opposed to the other APs (8d:88:d1 and 8d:7d:c1) which weren't upgraded and are using 0s as the SSID</p>
+<p>Ultimately, the problem was resolved by upgrading the firmware of the APs to 0.12.27250 which in Mist's defense, was mentioned in their release notes for this type of problem. From what we were told, there were some differences in the SDKs between AP model platforms that handle this situation. This problem was not present in the SDK used in the AP45s which is why there weren't any reports of issues on those APs. So was this a client problem? Or was this an AP problem? Or can we point the blame at both?</p>
+<p>Hopefully this was helpful. Thanks to my coworkers who were on-site to help collect and analyze what we were seeing and thanks to the community as always for spitballing with me.</p>
+</div>
+</article>
+        </main>
+        <aside class="uk-width-medium-1-4">
+
+  <div class="uk-panel uk-panel-box uk-text-center">
+    <a href="/author/Keith Miller.html">
+      <img alt="A picture of the author of this content." class="uk-border-circle" src="/theme/img/me.jpeg"/><h3>Keith Miller</h3></a>
+      <p>
+      Hi there! My name is Keith, check out more <a href="authors.html">about me</a>.
+      </p>
+  </div>
+
+  <div class="uk-panel">
+      <h3 class="uk-panel-title">Social Links</h3>
+      <div class="icons">
+          <a href="https://twitter.com/packetologist" class="uk-icon-button uk-icon-justify uk-icon-twitter"></a>
+          <a href="https://www.linkedin.com/in/keith-miller-b761073a/" class="uk-icon-button uk-icon-justify uk-icon-linkedin"></a>
+      </div>
+  </div>
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Tags</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="/tag/troubleshooting.html" class="uk-icon-tag">troubleshooting</a></li>
+          <li><a href="/tag/wi-fi.html" class="uk-icon-tag">wi-fi</a></li>
+          <li><a href="/tag/android.html" class="uk-icon-tag">android</a></li>
+          <li><a href="/tag/mist.html" class="uk-icon-tag">mist</a></li>
+          <li><a href="/tag/python.html" class="uk-icon-tag">python</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/lldp.html" class="uk-icon-tag">lldp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ekahau.html" class="uk-icon-tag">ekahau</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/dhcp.html" class="uk-icon-tag">dhcp</a></li>
+          <li class="uk-hidden hidden-tags"><a href="/tag/ruckus.html" class="uk-icon-tag">ruckus</a></li>
+              </ul>
+              <button class="uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">More Tags</button>
+              <button class="uk-hidden uk-button hidden-tags" data-uk-toggle="{target:'.hidden-tags'}">Less Tags</button>
+    </div>
+
+
+    <div class="uk-panel">
+    <h3 class="uk-panel-title">Links</h3>
+    <ul class="uk-list uk-list-line">
+          <li><a href="https://getpelican.com/" class="uk-icon-external-link">Pelican</a></li>
+          <li><a href="https://www.python.org/" class="uk-icon-external-link">Python.org</a></li>
+          <li><a href="https://palletsprojects.com/p/jinja/" class="uk-icon-external-link">Jinja2</a></li>
+    </ul>
+    </div>
+
+        </aside>
+    </div>
+    <footer class="uk-margin-bottom uk-panel uk-panel-box uk-text-center uk-margin-large-top">
+        Generated by <a href="https://github.com/getpelican/pelican" class="uk-icon-external-link">pelican</a>
+        and styled with <a href="http://getuikit.com" class="uk-icon-external-link">uikit</a>
+        and themed by <a href="http://inktrap.org" class="uk-icon-external-link">inktrap</a>
+        and made with <a class="uk-icon-heart"></a>
+        <br/>
+        <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="/theme/ico/cc/by-sa/4.0/80x15.png" /></a>This work is licensed under a <a class="license" rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons BY-SA 4.0 International License</a>
+
+    </footer>
+</div>
+
+<div id="offcanvas" class="uk-offcanvas">
+    <div class="uk-offcanvas-bar">
+        <ul class="uk-nav uk-nav-offcanvas">
+        </ul>
+    </div>
+</div>
+  </body>
+</html>
